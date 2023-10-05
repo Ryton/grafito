@@ -941,10 +941,7 @@ graph: function [
             arturo: strip replace execute "arturo -v" ["arturo" "v/"] "" 
         ] 
  
-        routes: [ 
-            GET "/" [ 
-                render.template app 
-            ] 
+        routes: [              GET "/" [                  render.template app             ] 
  
             POST "/startup" [ 
                 write.json ø #[ 
@@ -954,7 +951,7 @@ graph: function [
                     versions: Versions 
                     caseSensitive: Grafito\caseSensitive? 
                     palettes: colorPalettes 
-                    activePalette: Grafito\Palette 
+                    activePalette: Grafito\Palette  
                 ] 
             ] 
  

@@ -8,45 +8,44 @@
 ;;
 ;; Have fun!
 
-do.import "grafito.art"
+do {grafito.art} 
 
 do [
-	graph.create "sample1" [
-		john: put 'person [s: "John" sex: 'm]
-		joan: put 'person [s: "Joan" sex: 'f]
-		bob:  put 'person [s: "Bob"  sex: 'm]
-		jill: put 'person [s: "Jill" sex: 'f]
+    ;---------------------------------------------
+    ; Set up a new graph environment
+    ; with a local database named "sample1"
+    ;---------------------------------------------
+     graph .helpers: [person]
+          .create
+          .palette: 'default
+	"sample1"
+    [
+        unless dbExists? [
+            ;---------------------------------------------
+            ; Populate the database
+            ;---------------------------------------------
 
-		link'marriedTo john joan
-		link'childOf @[bob jill] @[john joan]
-	]
-]
+		john: person.new [s: "John" sex: 'm] 
+		joan: person.new [s: "Joan" sex: 'f] 
+		bob:  person.new [s: "Bob"  sex: 'm] 
+		jill: person.new [s: "Jill" sex: 'f] 
+            ;---------------------------------------------
+            ; Define the relationships
+            ; between our nodes
+            ;---------------------------------------------
+		joan ~> 'marriedTo john
+		john ~> 'marriedTo joan
+		[bob jill] ~> 'childOf [john joan] 
+	] 
 
-do [
-	benchmark [
-		graph.verbose "sample1" [
 
-			print "getting first person named Joan..."
-			joan: what'person [s: "Joan"]
-			inspect joan
-
-			print "getting all male people married to Joan..."
-			husband: what 'person [sex: 'm marriedTo: joan]
-			inspect husband
-
-			; inspect fetch 'person [
-			; 	marriedTo: what 'person [s: "Joan"]
-			; ]
-
-			preview fetch 'person ø
-		]
-	]
-]
-
-; do [
-; 	graph "sample1" [
-; 		preview fetch 'person ø
-; 	]
-; ]
+        ;---------------------------------------------
+        ; Fetch every "person" &
+        ; open the Desktop app for visualization
+        ;---------------------------------------------
+  
+ 		preview fetch 'person ø
+ 	]
+ ]
 
 ; execute ~"dot -Tpng sample.dot -o sample.png"
