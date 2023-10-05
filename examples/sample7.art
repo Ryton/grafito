@@ -1,21 +1,29 @@
-do.import {grafito.art}
+do {grafito.art}
 
 do [
-    graph.create "sample7" [
-        put'country [name: "United States"]
-        put'country [name: "Australia"]
+    graph.create 
+	.helpers: [country person]
+	.palette: 'default
+	"sample7" [
 
-        john: put'person [name: "John" surname: "Doe" age: 34 country: "United States"]
-        jane: put'person [name: "Jane" surname: "doe" age: 24 country: "United States"]
-        put'person [name: "Bill" surname: "Jones" age: 44 country: "Australia"]
+        unless dbExists? [
 
-        link'marriedTo john jane
+        put 'country [name: "United States"]
+        put 'country [name: "Australia"]
 
+        john: put 'person [name: "John" surname: "Doe" age: 34 country: "United States"]
+        jane: put 'person [name: "Jane" surname: "doe" age: 24 country: "United States"]
+              put 'person [name: "Bill" surname: "Jones" age: 44 country: "Australia"]
+
+        john ~> 'marriedTo jane
+
+	]
         ; let's find all the people who are 
         ; more than 30 years old
-        inspect fetch'person [
-            age: -> greater: 30
-            surname: "Doe"
-        ]
+
+	print "A combined filter would be: \n  fetch 'person [ age: -> over: 30   surname: \"Doe\"]. \n to find the full graph, do: >> fetch 'person [] (or ø)"
+
+        preview fetch 'person  ø
+
     ]
 ]

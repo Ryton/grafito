@@ -1,20 +1,45 @@
-do.import {grafito.art}
+do {grafito.art}
 
-do [ graph.create "sample2" [
-    honorEnN: put'Pos [p:"noun"]
-    honorEsN: put'Pos [p:"noun"]
-    dishonorEnN: put'Pos [p:"noun"]
 
-    tokenS: put'Sense [s:"token of praise or respect"]
+do [
+    ;---------------------------------------------
+    ; Set up a new graph environment
+    ; with a local database named "sample1"
+    ;---------------------------------------------
+     graph .helpers: [Pos Sense Lemma]
+          .create
+          .palette: 'default
+	"sample2"
+    [
+        unless dbExists? [
+            ;---------------------------------------------
+            ; Populate the database
+            ;---------------------------------------------
 
-    link'has (put'Lemma [w:"honor" l:"en"]) honorEnN
-    link'has (put'Lemma [w:"honor" l:"es"]) honorEsN
-    link'has (put'Lemma [w:"dishonor" l:"en"]) dishonorEnN
 
-    link'means honorEnN tokenS
-    link'means honorEsN tokenS
+	    honorEnN: Pos.new [p:"noun1"]
+	    honorEsN: Pos.new [p:"noun2"]
+	    dishonorEnN: Pos.new [p:"noun3"]
+	    tokenS: Sense.new [s:"token of praise or respect"]
 
-    link'antonym dishonorEnN honorEnN
+            ;---------------------------------------------
+            ; Define the relationships
+            ; between our nodes
+            ;---------------------------------------------
+	     Lemma.new [w:"honor" l:"en"] ~> 'has  honorEnN
+	     Lemma.new [w:"honor" l:"es"] ~> 'has  honorEsN
+	     Lemma.new [w:"dishonor" l:"en"] ~> 'has dishonorEnN
 
+	 honorEnN ~> 'means tokenS
+	 honorEsN ~> 'means tokenS
+
+     dishonorEnN ~> 'antonym honorEnN
+	]
+        ;---------------------------------------------
+        ; Fetch every "Pos" &
+        ; open the Desktop app for visualization
+        ;---------------------------------------------
     preview fetch 'Pos ø
-]]
+
+]
+]

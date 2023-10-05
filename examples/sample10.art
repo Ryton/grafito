@@ -1,14 +1,17 @@
-do.import {grafito.art}
+do {grafito.art}
 
 do [
     ;---------------------------------------------
     ; Set up a new graph environment
-    ; with a local database named "sample4"
+    ; with a local database named "sample10"
     ;---------------------------------------------
-    graph.create "sample10" [
+    graph.create 
+	.helpers: [person]
+	.palette: 'default
+	 "sample10" [
         j: put 'person [name: "John" age: 35]
         n: put 'person [name: "Jane" age: 41]
-        link 'likes j n
+         j  ~> 'likes n
         preview fetch 'person ø
     ]
 ]

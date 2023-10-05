@@ -1,31 +1,37 @@
-do.import {grafito.art}
+do {grafito.art}
 
 do [
-    graph.create "sample3" [
-        nick: put'person [name: "Nick", sex: "m", birth: 1957]
-        eleftheria: put'person [name: "Eleftheria", sex: "f", birth: 1960]
-        angela: put'person [name: "Angela", sex: "f", birth: 1999]
-        john: put'person [name: "John", sex: "m", birth: 1986]
+    graph.helpers: [person food ]
+	.create 
+          .palette: 'default
+	"sample3"
+ [
+ unless dbExists? [
+        nick: person.new [name: "Nick", sex: "m", birth: 1957]
+        eleftheria: person.new [name: "Eleftheria", sex: "f", birth: 1960]
+        angela: person.new [name: "Angela", sex: "f", birth: 1999]
+        john: person.new [name: "John", sex: "m", birth: 1986]
         
-        niovi: put'person [name: "Niovi", sex: "f", birth: 1928]
-        johnA: put'person [name: "John", sex: "m", birth: 1933]
+        niovi: person.new [name: "Niovi", sex: "f", birth: 1928]
+        johnA: person.new [name: "John", sex: "m", birth: 1933]
 
-        tatie: put'person [name: "Tatie", sex: "m", birth: 1958]
+        tatie: person.new [name: "Tatie", sex: "m", birth: 1958]
 
-        spaghetti: put'food [name: "Spaghetti"]
-        pizza: put'food [name: "Pizza"]
-        steak: put'food [name: "Steak"]
+        spaghetti: food.new [name: "Spaghetti"]
+        pizza: food.new [name: "Pizza"]
+        steak: food.new [name: "Steak"]
 
-        link'marriedTo nick eleftheria
-        link'marriedTo johnA niovi
+	nick ~>'marriedTo eleftheria
+	 johnA ~>'marriedTo niovi
 
-        link'childOf @[angela john] @[nick eleftheria]
-        link'childOf @[nick tatie] @[johnA niovi]
+       [angela john] ~> 'childOf [nick eleftheria]
+	[nick tatie] ~> 'childOf [johnA niovi]
 
-        link'likes @[john angela niovi] @[spaghetti]
-        link'likes @[eleftheria johnA nick] @[pizza]
-        link'likes @[john tatie nick] @[steak]
-
-        preview fetch 'person ø
+        [john angela niovi] ~> 'likes [spaghetti]
+        [eleftheria johnA nick]  ~> 'likes [pizza]
+        [john tatie nick] ~> 'likes [steak]
     ]
+        preview fetch 'person ø
+
+]
 ]

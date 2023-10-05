@@ -2,14 +2,17 @@
 ; Import Grafito
 ; and ... let's rock'n'roll! :)
 ;---------------------------------------------
-do.import {grafito.art}
+do {grafito.art}
 
 do [
     ;---------------------------------------------
     ; Set up a new graph environment
-    ; with a local database named "sample4"
+    ; with a local database named "sample9"
     ;---------------------------------------------
-    graph.create "sample9" [
+    graph.create 
+	.helpers: [modl person]
+	.palette: 'default
+	 "sample9" [
 
         ArithmeticObj: put'modl [name: "Arithmetic"]
         arraysObj: put'modl [name: "arrays"]
@@ -68,83 +71,88 @@ do [
         versionObj: put'modl [name: "version"]
         vmObj: put'modl [name: "vm"]
         webviewObj: put'modl [name: "webview"]
-        link'rel valueObj bignumObj
-        link'rel errorsObj stringsObj
-        link'rel valueObj errorsObj
-        link'rel envObj valueObj
-        link'rel evalObj debugObj
-        link'rel globalsObj errorsObj
-        link'rel globalsObj valueObj
-        link'rel bytecodeObj globalsObj
-        link'rel bytecodeObj valueObj
-        link'rel evalObj bytecodeObj
-        link'rel evalObj globalsObj
-        link'rel evalObj valueObj
-        link'rel parseObj errorsObj
-        link'rel parseObj valueObj
-        link'rel stackObj valueObj
-        link'rel execObj bytecodeObj
-        link'rel execObj errorsObj
-        link'rel execObj evalObj
-        link'rel execObj globalsObj
-        link'rel execObj parseObj
-        link'rel execObj stackObj
-        link'rel execObj valueObj
-        link'rel vmObj envObj
-        link'rel vmObj errorsObj
-        link'rel vmObj evalObj
-        link'rel vmObj execObj
-        link'rel vmObj globalsObj
-        link'rel vmObj parseObj
-        link'rel vmObj stackObj
-        link'rel vmObj valueObj
-        link'rel vmObj versionObj
-        link'rel libObj globalsObj
-        link'rel libObj errorsObj
-        link'rel libObj stackObj
-        link'rel libObj valueObj
-        link'rel ArithmeticObj libObj
-        link'rel vmObj ArithmeticObj
-        link'rel BinaryObj libObj
-        link'rel vmObj BinaryObj
-        link'rel arraysObj valueObj
-        link'rel CollectionsObj arraysObj
-        link'rel unisortObj valueObj
-        link'rel CollectionsObj unisortObj
-        link'rel CollectionsObj libObj
-        link'rel vmObj CollectionsObj
-        link'rel ComparisonObj libObj
-        link'rel vmObj ComparisonObj
-        link'rel ConvertersObj bignumObj
-        link'rel urlObj valueObj
-        link'rel datasourceObj urlObj
-        link'rel ConvertersObj datasourceObj
-        link'rel ConvertersObj stringsObj
-        link'rel ConvertersObj libObj
-        link'rel ConvertersObj errorsObj
-        link'rel ConvertersObj execObj
-        link'rel ConvertersObj parseObj
-        link'rel vmObj ConvertersObj
-        link'rel CoreObj datasourceObj
-        link'rel ffiObj errorsObj
-        link'rel ffiObj valueObj
-        link'rel CoreObj ffiObj
-        link'rel CoreObj libObj
-        link'rel CoreObj envObj
-        link'rel CoreObj errorsObj
-        link'rel CoreObj evalObj
-        link'rel CoreObj execObj
-        link'rel CoreObj parseObj
-        link'rel vmObj CoreObj
-        link'rel CryptoObj libObj
-        link'rel vmObj CryptoObj
-        link'rel databaseObj valueObj
-        link'rel DatabasesObj databaseObj
-        link'rel DatabasesObj libObj
-        link'rel vmObj DatabasesObj
-        link'rel DatesObj libObj
-        link'rel vmObj DatesObj
-        link'rel htmlObj valueObj
+
+
+	valueObj ~>'rel bignumObj
+	errorsObj ~>'rel stringsObj
+	valueObj ~>'rel errorsObj
+	envObj ~>'rel valueObj
+	evalObj ~>'rel debugObj
+	globalsObj ~>'rel errorsObj
+	globalsObj ~>'rel valueObj
+	bytecodeObj ~>'rel globalsObj
+	bytecodeObj ~>'rel valueObj
+	evalObj ~>'rel bytecodeObj
+	evalObj ~>'rel globalsObj
+	evalObj ~>'rel valueObj
+	parseObj ~>'rel errorsObj
+	parseObj ~>'rel valueObj
+	stackObj ~>'rel valueObj
+	execObj ~>'rel bytecodeObj
+	execObj ~>'rel errorsObj
+	execObj ~>'rel evalObj
+	execObj ~>'rel globalsObj
+	execObj ~>'rel parseObj
+	execObj ~>'rel stackObj
+	execObj ~>'rel valueObj
+	vmObj ~>'rel envObj
+	vmObj ~>'rel errorsObj
+	vmObj ~>'rel evalObj
+	vmObj ~>'rel execObj
+	vmObj ~>'rel globalsObj
+	vmObj ~>'rel parseObj
+	vmObj ~>'rel stackObj
+	vmObj ~>'rel valueObj
+	vmObj ~>'rel versionObj
+	libObj ~>'rel globalsObj
+	libObj ~>'rel errorsObj
+	libObj ~>'rel stackObj
+	libObj ~>'rel valueObj
+	ArithmeticObj ~>'rel libObj
+	vmObj ~>'rel ArithmeticObj
+	BinaryObj ~>'rel libObj
+	vmObj ~>'rel BinaryObj
+	arraysObj ~>'rel valueObj
+	CollectionsObj ~>'rel arraysObj
+	unisortObj ~>'rel valueObj
+	CollectionsObj ~>'rel unisortObj
+	CollectionsObj ~>'rel libObj
+	vmObj ~>'rel CollectionsObj
+	ComparisonObj ~>'rel libObj
+	vmObj ~>'rel ComparisonObj
+	ConvertersObj ~>'rel bignumObj
+	urlObj ~>'rel valueObj
+	datasourceObj ~>'rel urlObj
+	ConvertersObj ~>'rel datasourceObj
+	ConvertersObj ~>'rel stringsObj
+	ConvertersObj ~>'rel libObj
+	ConvertersObj ~>'rel errorsObj
+	ConvertersObj ~>'rel execObj
+	ConvertersObj ~>'rel parseObj
+	vmObj ~>'rel ConvertersObj
+	CoreObj ~>'rel datasourceObj
+	ffiObj ~>'rel errorsObj
+	ffiObj ~>'rel valueObj
+	CoreObj ~>'rel ffiObj
+	CoreObj ~>'rel libObj
+	CoreObj ~>'rel envObj
+	CoreObj ~>'rel errorsObj
+	CoreObj ~>'rel evalObj
+	CoreObj ~>'rel execObj
+	CoreObj ~>'rel parseObj
+	vmObj ~>'rel CoreObj
+	CryptoObj ~>'rel libObj
+	vmObj ~>'rel CryptoObj
+	databaseObj ~>'rel valueObj
+	DatabasesObj ~>'rel databaseObj
+	DatabasesObj ~>'rel libObj
+	vmObj ~>'rel DatabasesObj
+	DatesObj ~>'rel libObj
+	vmObj ~>'rel DatesObj
+	htmlObj  valueObj
+	arturoObj ~>'rel valueObj
+        arturoObj ~>'rel vmObj
+
         ; link'rel markdownObj md4cObj
         ; link'rel markdownObj valueObj
         ; link'rel tomlObj valueObj
@@ -220,9 +228,9 @@ do [
         ; link'rel UiObj execObj
         ;link'rel vmObj UiObj
         ;link'rel arturoObj versionObj
-        link'rel arturoObj valueObj
-        link'rel arturoObj vmObj
-                
+        
+        print " relationships in programming language (arturo?)."
+
         preview fetch 'modl ø
     ]
 ]

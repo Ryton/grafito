@@ -1,7 +1,11 @@
-do.import {grafito.art}
+do {grafito.art}
 
 do [
-    graph.create "sample8" [
+
+  graph.create 
+	.helpers: [country person]
+	.palette: 'default
+	"sample8" [
         ;---------------------------------------------
         ; Populate the database
         ;---------------------------------------------
@@ -15,53 +19,58 @@ do [
         bill: put'person [name: "Bill" surname: "Jones" age: 44]
         mary: put'person [name: "Mary" age: 54]
 
-        link'marriedTo john jane
-        link'marriedTo bill mary
+	john ~> 'marriedTo jane
+	jane ~> 'marriedTo  john; is there a way to make it reciprocal?
+	bill  ~> 'marriedTo mary
+	mary  ~> 'marriedTo bill
 
-        link'isFrom @[john mary] us
-        link'isFrom @[jane bill] au
+        [john mary] ~> 'isFrom us
+	[jane bill] ~> 'isFrom  au
 
         ;---------------------------------------------
         ; Let's perform some interesting queries!
         ;---------------------------------------------
 
-        ; fetch all people
-        inspect fetch'person ø
-
-        ; fetch all people that have a surname
-        inspect fetch'person [surname: true]
-
-        ; fetch all people that have the name John
-        inspect fetch'person [name: "John"]
-
-        ; fetch all people that are over 40 years old
-        inspect fetch'person [age: -> greater: 40]
-
-        ; fetch all people that are over 40 years old 
-        ; and have the surname "Jones"
-        inspect fetch'person [
-            age: -> greater: 40
-            surname: "Jones"
-        ]
-
-        ; fetch all people that have the name John
-        ; and are married to someone/anyone
-        inspect fetch'person [
-            name:"John" 
-            marriedTo: ø 
-        ]
-
-        ; fetch all people that have the name John
-        ; and are married to someone with the name Joan
-        inspect fetch'person [
-            name:"John" marriedTo: what'person [name:"Joan"]
-        ]
-
-        ; fetch all people that have either the name "John"
-        ; or the surname "Jones"
-        inspect fetch'person .any [
-            name:"John" 
-            surname:"Jones"
-        ]
+print ["    Some more interesting queries are: 	\n" 
+"         ;fetch all people:				\n" 
+"        	 fetch'person ø   			\n" 
+							"\n"
+"        ;show all people that have a surname 	 	\n" 
+"        fetch'person [surname: true]   	\n" 
+							"\n"
+"        ;Return all people that have the name John  	\n" 
+"           fetch'person [name: \"John\"]            \n" 
+							"\n"
+"         ;filter all people that are over 40 years old    \n" 
+"           fetch'person [age: -> over: 40]	 \n" 
+							"\n"
+"         ;group all people that are over 40 years old  	\n" 
+"         ;and have the surname \"Jones\" 			\n" 
+							"\n"        
+"         fetch'person [ 				\n"
+"            age: -> over: 40 			\n" 
+"            surname: \"Jones\" ]					\n" 
+"         								\n" 
+"        ; fetch all people that have the name John			\n" 
+"        ; and are married to someone/anyone				\n" 
+"        fetch'person [						\n" 
+"            name:\"John\" 						\n" 
+"            marriedTo: ø  ]						\n" 
+"        								\n"
+									"\n" 
+"        ; fetch all people that have the name John			\n" 
+"        ; and are married to someone with the name Joan		\n" 
+"         fetch'person [						\n"
+"            name:\"John\" marriedTo: what'person [name:\"Joan\"] ]		\n" 
+"        								\n" 
+									"\n" 
+"        ; fetch all people that have either the name \"John\"		\n" 
+"        ; or the surname \"Jones\"					\n" 
+"         fetch'person .any [					\n" 
+"            name:\"John\" 					\n" 
+"            surname:\"Jones\"	]				\n"
+"\n"
+"         ; Try it yourself!"   ] ;end print
+    preview fetch 'person  ø
     ]
 ]

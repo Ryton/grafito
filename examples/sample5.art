@@ -1,7 +1,10 @@
-do.import {grafito.art}
+do {grafito.art}
 
 do [
-    graph.create "sample5" [
+    graph.create
+	.helpers: [lemma person]
+	.palette: 'default
+	 "sample5" [
         lemma8b257cd027: put 'lemma [w: {book} l: {en}]
         pos3722df1028: put'pos [p: {noun}]
         link'is lemma8b257cd027 pos3722df1028

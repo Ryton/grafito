@@ -2,18 +2,22 @@
 ; Import Grafito
 ; and ... let's rock'n'roll! :)
 ;---------------------------------------------
-do.import {grafito.art}
+do {grafito.art}
 
 do [
     ;---------------------------------------------
     ; Set up a new graph environment
     ; with a local database named "sample4"
     ;---------------------------------------------
-    graph.create "sample4" [
+    graph.helpers: []
+	.create 
+	.palette: 'default
+	"sample4" [
 
-        ;---------------------------------------------
-        ; Populate the database
-        ;---------------------------------------------
+        unless dbExists? [
+            ;---------------------------------------------
+            ; Populate the database
+            ;---------------------------------------------
 
         uk: put'country [name: "United Kingdom"]
         au: put'country [name: "Australia"]
@@ -40,20 +44,21 @@ do [
         ; between our nodes
         ;---------------------------------------------
 
-        link'isFrom nolan uk
-        link'isFrom pearce au
-        link'isFrom @[hanson spacey dicaprio wach1 wach2] us
-        link'isFrom moss ca
+	; old layout:         link'isFrom pearce au
+        nolan ~> 'isFrom uk
+        pearce ~> 'isFrom au
+        [hanson spacey dicaprio wach1 wach2] ~>'isFrom us
+        moss ~> 'isFrom ca
 
-        link'directed nolan @[memento inception]
-        link'directed hanson laconfidential
-        link'directed @[wach1 wach2] matrix
+         nolan ~> 'directed [memento inception]
+	 hanson ~> 'directed laconfidential
+         [wach1 wach2] ~> 'directed  matrix
 
-        link'actedIn pearce @[memento laconfidential]
-        link'actedIn spacey laconfidential
-        link'actedIn dicaprio inception
-        link'actedIn moss @[memento matrix]
-
+         pearce ~> 'actedIn [memento laconfidential]
+         spacey ~> 'actedIn laconfidential
+	 dicaprio ~> 'actedIn inception
+	 moss ~> 'actedIn [memento matrix]
+ 	]
         ;---------------------------------------------
         ; Fetch every "person" &
         ; open the Desktop app for visualization

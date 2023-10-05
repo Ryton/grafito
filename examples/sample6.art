@@ -1,15 +1,21 @@
-do.import {grafito.art}
+do {grafito.art}
 
 do [
-    graph "sample6" [
+    graph  .helpers: [person]
+	.palette: 'default
+.create
+"sample6" [
         put'person [name: "John" surname: "Doe" age: 34]
         put'person [name: "Jane" surname: "doe" age: 24]
         put'person [name: "Bill" surname: "Jones" age: 44]
 
         ; let's find all the people who are 
         ; more than 30 years old
-        inspect fetch'person [
-            age: -> greater: 30
-        ]
+
+	print "Showing only those people older than 30, can be done with filter string: \n > fetch 'person [ age: -> over: 30 ]"
+
+        preview fetch 'person   ø
+
+
     ]
 ]
