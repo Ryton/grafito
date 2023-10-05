@@ -1,1259 +1,1259 @@
-#!/usr/bin/env arturo
-;========================================================
-; Grafito
-;
-; SQLite-based Graph Database
-; in Arturo
-;--------------------------------------------------------
-;; name: grafito
-;; version: 0.2.8
-;; author: drkameleon
-;; website: « https://github.com/arturo-lang/grafito
-;; category: database
-;; embed: [
-;;      "ui" "sql"
-;;      ".art" ".sql" ".html" ".less" ".js"
-;; ]
-;========================================================
-
-;--------------------------
-; The main library
-;--------------------------
-
-Grafito: #[
-    ; version
-    Version: 0.2.8
-
-    ; configuration
-    Debug?: false
-    verbose?: true
-    caseSensitive?: true
-
-    ; colors
-    Palette: ""
-]
-
-graph: function [
-    dbpath :string :null
-    body :block
-][
-    ;; description: « initiate a new graph environment with given name and body
-    ;; options: [
-    ;;      create: « recreate database from scratch, even if it exists
-    ;;      case: « queries should be case-sensitive
-    ;;      verbose: « show messages regarding database operations
-    ;;      palette: :string :literal « select color palette (current: default)
-    ;; ]
-    ;; returns: :any
-    ;; example: {
-    ;;      graph "mydb" [
-    ;;          ; do sth with this graph database
-    ;;      ]
-    ;;      ..........
-    ;;      ; in memory database
-    ;;      graph ø [
-    ;;          ; do sth with this graph database
-    ;;      ]
-    ;; }
-
-    ;==========================================
-    ; CONSTANTS
-    ;==========================================
-
-    ; Global SQL scripts
-
-    schemaSQL:                  split.by:";" read "sql/schema.sql"
-
-    createNodeSQL:              read "sql/procs/createNode.sql"
-    updateNodeSQL:              read "sql/procs/updateNode.sql"
-    updateNodePropertySQL:      read "sql/procs/updateNodeProperty.sql"
-    updateNodePropertiesSQL:    read "sql/procs/updateNodeProperties.sql"
-    deleteNodeSQL:              read "sql/procs/deleteNode.sql"
-    deleteNodeEdgesSQL:         read "sql/procs/deleteNodeEdges.sql"
-    getNodeSQL:                 read "sql/procs/getNode.sql"
-    getRelatedNodesSQL:         read "sql/procs/getRelatedNodes.sql"
-    getMaxNodeIdSQL:            read "sql/procs/getMaxNodeId.sql"
-
-    createEdgeSQL:              read "sql/procs/createEdge.sql"
-    updateEdgeSQL:              read "sql/procs/updateEdge.sql"
-    deleteEdgeSQL:              read "sql/procs/deleteEdge.sql"
-    deleteEdgeByIdSQL:          read "sql/procs/deleteEdgeById.sql"
-
-    fetchNodesSQL:              read "sql/procs/fetchNodes.sql"
-    fetchNodesWithEdgesSQL:     read "sql/procs/fetchNodes.withEdges.sql"
-
-    countNodesSQL:              read "sql/procs/countNodes.sql"
-    countEdgesSQL:              read "sql/procs/countEdges.sql"
-
-    ; Global SQL filters
-
-    hasEdgeFilter:              read "sql/filters/hasEdge.sql"
-    hasPropertyFilter:          read "sql/filters/hasProperty.sql"
-    edgeWithTargetFilter:       read "sql/filters/edgeWithTarget.sql"
-    propertyWithValueFilter:    read "sql/filters/propertyWithValue.sql"
-
-    ; Global SQL pragmas
-
-    caseInsensitiveLikePragma:  read "sql/pragmas/caseInsensitiveLike.sql"
-    caseSensitiveLikePragma:    read "sql/pragmas/caseSensitiveLike.sql"
-
-    ; Global UI template
-
-    app: read "ui/index.html"
-
-    ; Color palettes
-    ; for graph nodes
-
-    colorPalettes: #.raw flatten.once map list "ui/palettes" 'pal [
-        @[extract.filename pal, as.data pal]
-    ]
-
-    ;==========================================
-    ; HELPERS
-    ;==========================================
-
-    ;
-    ; Perform query
-    ;--------------------------
-
-    performQuery: function [ctx, qu, params][
-        if and? [Grafito\Debug?][null? attr 'noDebug] [
-            context: to :string ctx
-            prepend: " | "
-            print color.bold #gray ">: " ++ context
-            
-            queryString: qu
-            if block? qu [
-                queryString: join.with:"\n" qu
-            ]
-
-            print color #gray prepend ++ join.with:"\n"++prepend split.lines queryString
-
-            print ""
-        ]
-        (not? null? params)? [
-            query db .with: params qu
-        ][
-            query db qu
-        ]
-    ]
-
-    ;
-    ; Print message
-    ;--------------------------
-
-    printDebug: function [msg][
-        print color #cyan ":: " ++ msg
-    ]
-
-    ;
-    ; Format size
-    ;--------------------------
-
-    formatSize: function [sz][
-        if sz < 1024 -> return sz
-        if sz < 1024*1024 -> return sz --> 'kB
-        if sz < 1024*1024*1024 -> return sz --> 'MB
-        if sz < 1024*1024*1024*1024 -> return sz --> 'GB
-        return @[]
-    ]
-
-    ;
-    ; Get db analytics
-    ;--------------------------
-
-    analytics: function [][
-        nodeCount: to :integer first first performQuery 'analytics countNodesSQL ø
-        edgeCount: to :integer first first performQuery 'analytics countEdgesSQL ø
-        avgDegree: edgeCount // nodeCount
-
-        filename: dbPath
-        filesize: 0
-
-        if not? empty? filename [
-            prefilesize: formatSize volume filename
-            filesize: #[
-                number: to :string scalar prefilesize
-                units: to :string units prefilesize
-            ]
-        ]
-
-        prememory: formatSize process\memory\occupied
-        mem: #[
-            number: to :string scalar prememory
-            units: to :string units prememory
-        ]
-
-        return #[
-            database: #[
-                nodes: nodeCount
-                edges: edgeCount
-                degree: to :floating to :string .format: ".2f" avgDegree
-            ]
-            memory: mem
-            disk: #[
-                path: filename
-                size: filesize
-            ]
-        ]
-    ]
-
-    ;
-    ; Get suitable fg color
-    ; depending on node bg
-    ; for better contrast
-    ;--------------------------
-
-    idealForeground: function [back][
-        rgbs: values extract back
-
-        lrgbs: map rgbs 'rgb [
-            C: rgb // 255
-            (C =< 0.03928)? -> C: C // 12.92
-                            -> C: ((C+0.055)//1.055) ^ 2.4
-            C
-        ]
-
-        L: (lrgbs\0*0.2126) + (lrgbs\1*0.7152) + (lrgbs\2*0.0722)
-
-        if L > 0.189 [ return #black ]
-        return #white
-    ]
-
-    ;
-    ; Get styled node
-    ; ready for use in the
-    ; graph view
-    ;--------------------------
-
-    styleNode: function [nodeId, nodeTag, nodeProps][
-        if not? key? Grafito\nodeColors nodeTag [
-            cpal: Grafito\Palette
-            cpal: colorPalettes\[cpal]
-
-            nodeColor: sample cpal
-            existingColors: map values Grafito\nodeColors => first
-            
-            while [contains? existingColors nodeColor] ->
-                nodeColor: sample cpal
-
-            Grafito\nodeColors\[nodeTag]: @[
-                nodeColor
-                idealForeground nodeColor
-            ]
-
-            updateMeta 'colors Grafito\nodeColors
-        ]
-
-        bg: to :string Grafito\nodeColors\[nodeTag]\0
-        fg: to :string Grafito\nodeColors\[nodeTag]\1
-
-        nodeLabel: first values nodeProps
-
-        highlightField: #[
-            border: as.code darken to :color bg 0.2
-            background: bg
-        ]
-
-        return #[
-            id: nodeId
-            tag: nodeTag
-            properties: nodeProps
-            label: truncate nodeLabel 10
-            fullLabel: nodeLabel
-            color: #[
-                border: bg
-                background: bg
-                hover: bg
-                highlight: highlightField
-            ]
-            font: #[
-                color: fg
-            ]
-        ]
-    ]
-
-    ;
-    ; Create new edge
-    ;--------------------------
-
-    edge: function [
-        src :integer :dictionary 
-        name :literal :string
-        tgt :integer :dictionary
-    ][
-        ;; description: « create edge from source to target node with given name
-        ;; returns: :dictionary
-
-        srcId: src
-        tgtId: tgt
-
-        if dictionary? srcId -> srcId: src\id
-        if dictionary? tgtId -> tgtId: tgt\id
-
-        edgeId: performQuery.id 'edge createEdgeSQL @[name, srcId, tgtId]
-
-        #[
-            id: edgeId
-            tag: name
-            source: src
-            target: tgt
-        ]
-    ]
-
-    ;
-    ; Delete existing edge
-    ;--------------------------
-
-    unedge: function [
-        src :integer
-        name :literal :string
-        tgt :integer
-    ][
-        ;; description: « delete edge from source to target node with given name
-
-        performQuery 'unedge deleteEdgeSQL @[name, src, tgt]
-    ]
-
-    ;
+#!/usr/bin/env arturo 
+;======================================================== 
+; Grafito 
+; 
+; SQLite-based Graph Database 
+; in Arturo 
+;-------------------------------------------------------- 
+;; name: grafito 
+;; version: 0.2.8 
+;; author: drkameleon 
+;; website: « https://github.com/arturo-lang/grafito 
+;; category: database 
+;; embed: [ 
+;;      "ui" "sql" 
+;;      ".art" ".sql" ".html" ".less" ".js" 
+;; ] 
+;======================================================== 
+ 
+;-------------------------- 
+; The main library 
+;-------------------------- 
+ 
+Grafito: #[ 
+    ; version 
+    Version: 0.2.8 
+ 
+    ; configuration 
+    Debug?: false 
+    verbose?: true 
+    caseSensitive?: true 
+ 
+    ; colors 
+    Palette: ""  
+] 
+ 
+graph: function [ 
+    dbpath :string :null 
+    body :block 
+][ 
+    ;; description: « initiate a new graph environment with given name and body 
+    ;; options: [ 
+    ;;      create: « recreate database from scratch, even if it exists 
+    ;;      case: « queries should be case-sensitive 
+    ;;      verbose: « show messages regarding database operations 
+    ;;      palette: :string :literal « select color palette (current: default) 
+    ;; ] 
+    ;; returns: :any 
+    ;; example: { 
+    ;;      graph "mydb" [ 
+    ;;          ; do sth with this graph database 
+    ;;      ] 
+    ;;      .......... 
+    ;;      ; in memory database 
+    ;;      graph ø [ 
+    ;;          ; do sth with this graph database 
+    ;;      ] 
+    ;; } 
+ 
+    ;========================================== 
+    ; CONSTANTS 
+    ;========================================== 
+ 
+    ; Global SQL scripts 
+ 
+    schemaSQL:                  split.by:";" read "sql/schema.sql" 
+ 
+    createNodeSQL:              read "sql/procs/createNode.sql" 
+    updateNodeSQL:              read "sql/procs/updateNode.sql" 
+    updateNodePropertySQL:      read "sql/procs/updateNodeProperty.sql" 
+    updateNodePropertiesSQL:    read "sql/procs/updateNodeProperties.sql" 
+    deleteNodeSQL:              read "sql/procs/deleteNode.sql" 
+    deleteNodeEdgesSQL:         read "sql/procs/deleteNodeEdges.sql" 
+    getNodeSQL:                 read "sql/procs/getNode.sql" 
+    getRelatedNodesSQL:         read "sql/procs/getRelatedNodes.sql" 
+    getMaxNodeIdSQL:            read "sql/procs/getMaxNodeId.sql" 
+ 
+    createEdgeSQL:              read "sql/procs/createEdge.sql" 
+    updateEdgeSQL:              read "sql/procs/updateEdge.sql" 
+    deleteEdgeSQL:              read "sql/procs/deleteEdge.sql" 
+    deleteEdgeByIdSQL:          read "sql/procs/deleteEdgeById.sql" 
+ 
+    fetchNodesSQL:              read "sql/procs/fetchNodes.sql" 
+    fetchNodesWithEdgesSQL:     read "sql/procs/fetchNodes.withEdges.sql" 
+ 
+    countNodesSQL:              read "sql/procs/countNodes.sql" 
+    countEdgesSQL:              read "sql/procs/countEdges.sql" 
+ 
+    ; Global SQL filters 
+ 
+    hasEdgeFilter:              read "sql/filters/hasEdge.sql" 
+    hasPropertyFilter:          read "sql/filters/hasProperty.sql" 
+    edgeWithTargetFilter:       read "sql/filters/edgeWithTarget.sql" 
+    propertyWithValueFilter:    read "sql/filters/propertyWithValue.sql" 
+ 
+    ; Global SQL pragmas 
+ 
+    caseInsensitiveLikePragma:  read "sql/pragmas/caseInsensitiveLike.sql" 
+    caseSensitiveLikePragma:    read "sql/pragmas/caseSensitiveLike.sql" 
+ 
+    ; Global UI template 
+ 
+    app: read "ui/index.html" 
+ 
+    ; Color palettes 
+    ; for graph nodes 
+ 
+    colorPalettes: #.raw flatten.once map list "ui/palettes" 'pal [ 
+        @[extract.filename pal, as.data pal] 
+    ] 
+ 
+    ;========================================== 
+    ; HELPERS 
+    ;========================================== 
+ 
+    ; 
+    ; Perform query 
+    ;-------------------------- 
+ 
+    performQuery: function [ctx, qu, params][ 
+        if and? [Grafito\Debug?][null? attr 'noDebug] [ 
+            context: to :string ctx 
+            prepend: " | " 
+            print color.bold #gray ">: " ++ context 
+             
+            queryString: qu 
+            if block? qu [ 
+                queryString: join.with:"\n" qu 
+            ] 
+ 
+            print color #gray prepend ++ join.with:"\n"++prepend split.lines queryString 
+ 
+            print "" 
+        ] 
+        (not? null? params)? [ 
+            query db .with: params qu 
+        ][ 
+            query db qu 
+        ] 
+    ] 
+ 
+    ; 
+    ; Print message 
+    ;-------------------------- 
+ 
+    printDebug: function [msg][ 
+        print color #cyan ":: " ++ msg 
+    ] 
+ 
+    ; 
+    ; Format size 
+    ;-------------------------- 
+ 
+    formatSize: function [sz][ 
+        if sz < 1024 -> return sz 
+        if sz < 1024*1024 -> return sz --> 'kB 
+        if sz < 1024*1024*1024 -> return sz --> 'MB 
+        if sz < 1024*1024*1024*1024 -> return sz --> 'GB 
+        return @[] 
+    ] 
+ 
+    ; 
+    ; Get db analytics 
+    ;-------------------------- 
+ 
+    analytics: function [][ 
+        nodeCount: to :integer first first performQuery 'analytics countNodesSQL ø 
+        edgeCount: to :integer first first performQuery 'analytics countEdgesSQL ø 
+        avgDegree: edgeCount // nodeCount 
+ 
+        filename: dbPath 
+        filesize: 0 
+ 
+        if not? empty? filename [ 
+            prefilesize: formatSize volume filename 
+            filesize: #[ 
+                number: to :string scalar prefilesize 
+                units: to :string units prefilesize 
+            ] 
+        ] 
+ 
+        prememory: formatSize process\memory\occupied 
+        mem: #[ 
+            number: to :string scalar prememory 
+            units: to :string units prememory 
+        ] 
+ 
+        return #[ 
+            database: #[ 
+                nodes: nodeCount 
+                edges: edgeCount 
+                degree: to :floating to :string .format: ".2f" avgDegree 
+            ] 
+            memory: mem 
+            disk: #[ 
+                path: filename 
+                size: filesize 
+            ] 
+        ] 
+    ] 
+ 
+    ; 
+    ; Get suitable fg color 
+    ; depending on node bg 
+    ; for better contrast 
+    ;-------------------------- 
+ 
+    idealForeground: function [back][ 
+        rgbs: values extract back 
+ 
+        lrgbs: map rgbs 'rgb [ 
+            C: rgb // 255 
+            (C =< 0.03928)? -> C: C // 12.92 
+                            -> C: ((C+0.055)//1.055) ^ 2.4 
+            C 
+        ] 
+ 
+        L: (lrgbs\0*0.2126) + (lrgbs\1*0.7152) + (lrgbs\2*0.0722) 
+ 
+        if L > 0.189 [ return #black ] 
+        return #white 
+    ] 
+ 
+    ; 
+    ; Get styled node 
+    ; ready for use in the 
+    ; graph view 
+    ;-------------------------- 
+ 
+    styleNode: function [nodeId, nodeTag, nodeProps][ 
+        if not? key? Grafito\nodeColors nodeTag [ 
+            cpal: Grafito\Palette 
+            cpal: colorPalettes\[cpal] 
+ 
+            nodeColor: sample cpal 
+            existingColors: map values Grafito\nodeColors => first 
+             
+            while [contains? existingColors nodeColor] -> 
+                nodeColor: sample cpal 
+ 
+            Grafito\nodeColors\[nodeTag]: @[ 
+                nodeColor 
+                idealForeground nodeColor 
+            ] 
+ 
+            updateMeta 'colors Grafito\nodeColors 
+        ] 
+ 
+        bg: to :string Grafito\nodeColors\[nodeTag]\0 
+        fg: to :string Grafito\nodeColors\[nodeTag]\1 
+ 
+        nodeLabel: first values nodeProps 
+ 
+        highlightField: #[ 
+            border: as.code darken to :color bg 0.2 
+            background: bg 
+        ] 
+ 
+        return #[ 
+            id: nodeId 
+            tag: nodeTag 
+            properties: nodeProps 
+            label: truncate nodeLabel 10 
+            fullLabel: nodeLabel 
+            color: #[ 
+                border: bg 
+                background: bg 
+                hover: bg 
+                highlight: highlightField 
+            ] 
+            font: #[ 
+                color: fg 
+            ] 
+        ] 
+    ] 
+ 
+    ; 
+    ; Create new edge 
+    ;-------------------------- 
+ 
+    edge: function [ 
+        src :integer :dictionary  
+        name :literal :string 
+        tgt :integer :dictionary 
+    ][ 
+        ;; description: « create edge from source to target node with given name 
+        ;; returns: :dictionary 
+ 
+        srcId: src 
+        tgtId: tgt 
+ 
+        if dictionary? srcId -> srcId: src\id 
+        if dictionary? tgtId -> tgtId: tgt\id 
+ 
+        edgeId: performQuery.id 'edge createEdgeSQL @[name, srcId, tgtId] 
+ 
+        #[ 
+            id: edgeId 
+            tag: name 
+            source: src 
+            target: tgt 
+        ] 
+    ] 
+ 
+    ; 
     ; Delete existing edge 
-    ; by id
-    ;--------------------------
-
-    unedgeById: function [
-        eid :integer
-    ][
-        ;; description: « delete edge with given id
-
-        performQuery 'unedgeById deleteEdgeByIdSQL @[eid]
-    ]
-
-    ;
-    ; Update single property
-    ; by id
-    ;--------------------------
-
-    editProperty: function [
-        nid :integer
-        prop :literal :string
-        val :any
-    ][
-        ;; description: « set or update single node property
-
-        performQuery 'editProperty updateNodePropertySQL @[~"$.|prop|", write.compact.json ø val, nid]
-    ]
-
-    ;
-    ; Update meta value
-    ;--------------------------
-
-    updateMeta: function [
-        prop :literal :string
-        val :any
-    ][
-        ;; description: « update a single meta value
-
-        editProperty 1 prop val
-    ]
-
-    ;
-    ; Re-tag existing edge 
-    ; by id
-    ;--------------------------
-
-    retagEdge: function [
-        eid :integer
-        tag :literal :string
-    ][
-        ;; description: « update edge with given tag
-
-        performQuery 'retag updateEdgeSQL @[tag, eid]
-    ]
-
-    ;
-    ; Get node with properties
-    ; from ID
-    ;--------------------------
-
-    nodeFromId: function [nid][
-        results: performQuery 'nodeFromId getNodeSQL @[nid]
-        
-        if empty? results ->
-            return ø 
-
-        return #[
-            id: nid
-            tag: first first results
-            properties: read.json last first results
-        ]
-    ]
-
-    ;
-    ; Get nodeset 
-    ; for graph visualization
-    ;--------------------------
-
-    nodeFromIds: function [nodes][
-        nodeset: nodes
-        if not? block? nodeset ->
-            nodeset: @[nodeset]
-
-        nodeElements: map nodeset 'nd -> styleNode nd\id nd\tag nd\properties
-        edgeElements: new []
-
-        loop nodeset [nd][
-            rezu: performQuery 'nodeFromIds getRelatedNodesSQL @[nd\id, nd\id, nd\id]
-
-            loop rezu [rez][
-                'nodeElements ++ styleNode rez\0 rez\1 read.json rez\2
-                'edgeElements ++ #[
-                    id: ~"|rez\3|+|rez\4|+|rez\5|"
-                    dbId: rez\6
-                    label: rez\5
-                    from: to :integer rez\3
-                    to: to :integer rez\4
-                ]
-            ]
-        ]
-
-        unique 'nodeElements
-        unique 'edgeElements
-
-        return #[
-            nodes: nodeElements
-            edges: edgeElements
-        ]
-    ]
-
-    ;
-    ; Generate access helper
-    ;--------------------------
-    generateHelper: function [id,block][
-        (not? null? attr 'new)? [
-            put id block
-        ][
-            fetch id block
-        ]
-    ]
-
-    ;==========================================
-    ; REPL
-    ;==========================================
-
-    ;
-    ; Switch verbosity on/off
-    ;--------------------------
-
-    verbose: function [] [
-        Grafito\verbose?: not? Grafito\verbose?
-    ]
-
-    ;==========================================
-    ; METHODS
-    ;==========================================
-
-    ;
-    ; Create new node
-    ;--------------------------
-    
-    put: function [
-        name :literal :string
-        attributes :block :dictionary
-    ][
-        ;; description: « insert new node(s) to graph with given name and attributes
-        ;; options: [
-        ;;      unique: « add only if node doesn't already exist
-        ;;      many: « add multiple nodes at once
-        ;; ]
-        ;; returns: :dictionary :block
-
-        if attr "unique" [
-            found: fetch name attributes
-            if not? empty? found -> return found
-        ]
-
-        result: new []
-
-        (not? null? attr 'many)? [
-            lastId: to :integer first first performQuery 'put getMaxNodeIdSQL ø
-            queries: new []
-            vals: new []
-            loop attributes 'nd [
-                lastId: lastId + 1
-                att: nd
-                if not? dictionary? att -> att: # att
-                'queries ++ createNodeSQL
-                'vals ++ @[name, write.compact.json ø att]
-                'result ++ #[
-                    id: lastId
-                    tag: name
-                    properties: att
-                ]
-            ]
-            performQuery 'put queries vals
-
-            if Grafito\verbose? ->
-                 printDebug ~{created |size attributes| nodes}
-        ] [
-            att: attributes
-            if not? dictionary? att -> att: # att
-            nodeId: performQuery.id 'put createNodeSQL @[name, write.compact.json ø att]
-            result: #[
-                id: nodeId
-                tag: name
-                properties: att
-            ]
-
-            if Grafito\verbose? ->
-                printDebug ~{created 1 node (@|nodeId|) with |size att| propert|(1 = size att)? -> "y" -> "ies"|}
-        ]
-    
-        return result
-    ]
-
-    ;
-    ; Update existing node
-    ;--------------------------
-
-    edit: function [
-        nd :dictionary :block
-        attributes :block :dictionary
-    ][
-        ;; description: « update given node(s) with attributes
-        ;; options: [
-        ;;      tag: :literal :string « also set new tag
-        ;;      replace: « replace entire object properties with given ones
-        ;; ]
-        ;; returns: :nothing
-
-        toUpdate: ø
-
-        (dictionary? nd)? ->
-            toUpdate: @[nd]
-        ->
-            toUpdate: new nd
-
-        doReplace?: not? null? attr 'replace
-        withTag: attr 'tag
-
-        additional: attributes
-        if block? additional ->
-            additional: # additional
-
-        loop toUpdate 'updateable [
-            newAttributes: ø
-
-            (doReplace?)? ->
-                newAttributes: additional
-            ->
-                newAttributes: extend updateable\properties additional
-
-            updateable\properties: newAttributes
-            (null? withTag)? ->
-                performQuery 'edit updateNodePropertiesSQL @[write.compact.json ø newAttributes, updateable\id]
-            ->
-                performQuery 'edit updateNodeSQL @[withTag, write.compact.json ø newAttributes, updateable\id]
-        ]
-    ]
-
-    ;
-    ; Delete existing node
-    ;--------------------------
-
-    unput: function [
-        nd :integer :dictionary :block
-    ][
-        ;; description: « remove given node(s) from graph
-        ;; returns: :nothing
-
-        toDelete: ø
-
-        (block? nd)? ->
-            toDelete: new nd
-        ->
-            toDelete: @[nd]
-
-        loop toDelete 'deletable [
-            nodeId: (dictionary? deletable) ? -> deletable\id -> deletable
-
-            performQuery 'unput @[
-                deleteNodeSQL, deleteNodeEdgesSQL
-            ] @[
-                nodeId, nodeId, nodeId
-            ]
-        ]
-    ]
-
-    ;
-    ; Link nodes with edges
-    ;--------------------------
-
-    link: function [
-        src :block :dictionary
-        name :literal :string
-        tgt :block :dictionary
-    ]
-    [
-        ;; description: « create a connection from source to target node with given name
-        ;; returns: :block :dictionary
-
-        edgeId: 0
-
-        (:dictionary = type tgt)? [
-            edges: new []
-            if :dictionary = type src [
-                ret: edge src name tgt
-                return ret
-            ]
-
-            sr: @ src
-            loop sr [s]->
-                'edges ++ edge s name tgt
-        
-            if Grafito\verbose? -> printDebug ~"created |size edges| edges"
-
-            return edges
-        ][
-            edges: new []
-            tg: @ tgt
-            (:dictionary = type src)? [
-                loop tg [t][
-                    'edges ++ edge src name t
-                ]
-            ][
-                sr: @ src
-                loop sr [s] [
-                    loop tg [t]->
-                        'edges ++ edge s name t
-                ]
-            ]
-
-            if Grafito\verbose? -> printDebug ~"created |size edges| edges"
-
-            return edges
-        ]
-    ]
-
-    reverseLink: function [
-        tgt :block :dictionary
-        name :literal :string
-        src :block :dictionary
-    ][
-        link src name tgt
-    ]
-
-    reciprocalLink: function [
-        src :block :dictionary
-        name :literal :string
-        tgt :block :dictionary
-    ][
-        link src name tgt
-        link tgt name src
-    ]
-
-    ;
-    ; Delete node edges
-    ;--------------------------
-
-    unlink: function [
-        src :integer :dictionary :block
-        name :literal :string
-        tgt :integer :dictionary :block
-    ][
-        ;; description: « remove connection from source to target node with given name
-
-        nodesFrom: new []
-        nodesTo: new []
-
-        ;case [(type src)=]
-        (dictionary? src)? -> nodesFrom: @[src\id]
-        [
-            (integer? src)? -> nodesFrom: @[src]
-            [
-                nodesFrom: new map src 'n [
-                    (dictionary? n)? -> n\id
-                    -> n
-                ]
-            ]
-        ]
-
-            ; when? -> :dictionary -> nodesFrom: @[src\id]
-            ; when? -> :integer -> nodesFrom: @[src]
-            ; else  -> nodesFrom: new map src 'n [
-            ;     if? dictionary? n -> n\id
-            ;     else -> n
-            ; ]
-
-        (dictionary? tgt)? -> nodesFrom: @[tgt\id]
-        [
-            (integer? tgt)? -> nodesFrom: @[tgt]
-            [
-                nodesFrom: new map tgt 'n [
-                    (dictionary? n)? -> n\id
-                    -> n
-                ]
-            ]
-        ]
-
-        ; if?case [(type tgt)=]
-        ;     when? -> :dictionary -> nodesTo: @[tgt\id]
-        ;     when? -> :integer -> nodesTo: @[tgt]
-        ;     else  -> nodesTo: new map tgt 'n [
-        ;         if? dictionary? n -> n\id
-        ;         else -> n
-        ;     ]
-
-        loop nodesFrom 'nf [
-            loop nodesTo 'nt [
-                unedge nf name nt
-            ]
-        ]
-
-        if Grafito\verbose? [
-            totalEdges: mul size nodesFrom size nodesTo
-            edgeLabel: (totalEdges = 1) ? -> "edge" -> "edges"
-            printDebug ~"removed |totalEdges| |edgeLabel|"
-        ]
-    ]
-
-    ;
-    ; Check node type
-    ;--------------------------
-    
-    isA?: function [ls,nd][
-        nd\tag = to :string ls
-    ]
-
-    ;
-    ; Fetch all results for tag
-    ; with given properties
-    ; and edges
-    ;--------------------------
-
-    fetch: function [
-        name :literal :string
-        attributes :null :string :block :dictionary
-    ][
-        ;; description: « retrieves nodes with name that match all given attributes
-        ;; options: [
-        ;;      .any « try matching any of the attributes
-        ;; ]
-        ;; returns: :block
-        
-        ;; setup main variables
-
-        catchAny?: false
-        if not? null? attr "any" ->
-            catchAny?: true
-
-        collator: ""
-        if not? Grafito\caseSensitive? ->
-            collator: " COLLATE NOCASE"
-
-        propertyFilters: new []
-        edgeFilters: new []
-        qvals: new @[name]
-        qpropvals: new []
-        qedgevals: new []
-
-        att: new attributes
-
-        (string? att)? [
-            [collate,symb,val]: @[collator, "=", as.code att]
-            
-            ; add it once (to check for `name`)
-            'propertyFilters ++ ~propertyWithValueFilter
-            'qpropvals ++ @[~"$.name"]
-
-            ; add it once more (to check for `title`)
-            'propertyFilters ++ ~propertyWithValueFilter
-            'qpropvals ++ @[~"$.title"]
-
-            ; we won't it to be valid when any of the two criteria above is true
-            ; so we'll have to forcefully set `catchAny?` to true
-            catchAny?: true
-        ]
-        [
-            if and? not? dictionary? att 
-                    not? null? att ->
-                att: # att
-
-            ; ; HACK - to solve
-            ; remove.key 'att 'n
-            ; remove.key 'att 'a
-
-            if not? empty? att [
-                loop att [k,v][
-                    if null? v [
-                        ; it's an edge filter without criteria
-                        'edgeFilters ++ hasEdgeFilter
-                        'qedgevals ++ @[k]
-                        continue
-                    ]
-                    if dictionary? v [
-                        ; it's an edge filter
-                        'edgeFilters ++ edgeWithTargetFilter
-                        'qedgevals ++ @[k, v\id]
-                        continue
-                    ]
-                    if block? v [
-                        (and? 0 < size v 
-                                :dictionary = type first v)? [
-                            ; it's an array of edge filters
-                            orCriteria: new []
-                            loop v [edgef][
-                                'orCriteria ++ {!sql (edges.tag=? AND edges.target=?)}
-                                'qedgevals ++ @[k, edgef\id]
-                            ]
-                            'edgeFilters ++ "(" ++ (join.with:" OR " orCriteria) ++ ")"
-                        ]
-                        [
-                            ; it's a complex property filter
-                            loop # v [filt,rg][
-
-                                [collate,symb,val]: @[collator, "=", v]
-
-                                (filt = "contains")? -> [collate,symb,val]: @["", "LIKE", ~"%|rg|%"]
-                                [
-                                    (filt = "prefix")? -> [collate,symb,val]: @["", "LIKE", ~"|rg|%"]
-                                    [
-                                        (filt = "suffix")? -> [collate,symb,val]: @["", "LIKE", ~"%|rg|"]
-                                        [
-                                            (filt = "under")? -> [collate,symb,val]: @["", "<", rg]
-                                            [
-                                                (filt = "over")? -> [collate,symb,val]: @["", ">", rg]
-                                                [
-                                                    (filt = "underOrEqual")? -> [collate,symb,val]: @["", "<=", rg]
-                                                    [
-                                                        (filt = "overOrEqual")? -> [collate,symb,val]: @["", ">=", rg]
-                                                        [
-                                                            (filt = "in")? -> [collate,symb,val]: @[collator, "IN", ~{(|join.with:", " map rg [x]["'" ++ (to :string x) ++ "'"]|)}]
-                                                            [
-                                                                (filt = "not")? [ 
-                                                                    (block? rg)?       -> [collate,symb,val]: @[collator, "NOT IN", ~{(|join.with:", " map rg [x]["'" ++ (to :string x) ++ "'"]|)}]
-                                                                                       -> [collate,symb,val]: @[collator, "!=", rg]
-                                                                ]
-                                                                [
-                                                                    panic.code: 1 ~"filter: |filt| not recognized"
-                                                                ]
-                                                            ]
-                                                        ]
-                                                    ]
-                                                ]
-                                            ]
-                                        ]
-                                    ]
-                                ]
-                                ; case [equal? filt]
-        
-                                ;     when? ["contains"]      -> [collate,symb,val]: @["", "LIKE", ~"%|rg|%"]
-                                ;     when? ["prefix"]        -> [collate,symb,val]: @["", "LIKE", ~"|rg|%"]
-                                ;     when? ["suffix"]        -> [collate,symb,val]: @["", "LIKE", ~"%|rg|"]
-                                ;     when? ["under"]         -> [collate,symb,val]: @["", "<", rg]
-                                ;     when? ["over"]          -> [collate,symb,val]: @["", ">", rg]
-                                ;     when? ["underOrEqual"]  -> [collate,symb,val]: @["", "<=", rg]
-                                ;     when? ["overOrEqual"]   -> [collate,symb,val]: @["", ">=", rg]
-                                ;     when? ["in"]            -> [collate,symb,val]: @[collator, "IN", ~{(|join.with:", " map rg [x]["'" ++ (to :string x) ++ "'"]|)}]
-                                ;     when? ["not"][     
-                                ;         if? block? rg       -> [collate,symb,val]: @[collator, "NOT IN", ~{(|join.with:", " map rg [x]["'" ++ (to :string x) ++ "'"]|)}]
-                                ;         else                -> [collate,symb,val]: @[collator, "!=", rg]
-                                ;     ]
-                                ;     else [
-                                ;         panic.code: 1 ~"filter: |filt| not recognized"
-                                ;     ]
-                                
-                                val: as.code val
-                                'propertyFilters ++ ~propertyWithValueFilter
-                                'qpropvals ++ @[~"$.|k|"]
-                            ]
-                        ]
-                        continue
-                    ]
-                    if logical? v [
-                        ; it's a simple property filter without criteria
-                        'propertyFilters ++ hasPropertyFilter
-                        'qpropvals ++ @[~"$.|k|"]
-                        continue
-                    ]
-                        
-                    ; it's a simple property filter
-                    [collate,symb,val]: @[collator, "=", as.code v]
-    
-                    'propertyFilters ++ ~propertyWithValueFilter
-                    'qpropvals ++ @[~"$.|k|"]
-                ]
-            ]
-        ]
-
-        qr: ""
-
-        propies: ""
-        linker: " AND "
-        edgeLimit: ~" = |size edgeFilters|"
-
-        if catchAny? [
-            linker: " OR "
-            edgeLimit: " >= 1"
-        ]
-
-        if not? empty? propertyFilters [
-            propies: ~{!sql AND (|join.with: linker propertyFilters|)}
-            'qvals ++ qpropvals
-        ]
-
-        (not? empty? edgeFilters)? [
-            edgies: join.with: " OR " edgeFilters
-            'qvals ++ qedgevals
-
-            qr: ~fetchNodesWithEdgesSQL
-        ]
-        [
-            qr: ~fetchNodesSQL
-        ]
-
-        return map performQuery 'fetch qr qvals 'x [
-            #[
-                id: x\0
-                tag: x\1
-                properties: read.json x\2
-            ]
-        ]
-    ]
-
-    ;
-    ; Visualize given nodeset
-    ;--------------------------
-
-    preview: function [
-        nodeset :block
-    ][
-        ;; description: « preview given set of nodes in Grafito's UI
-        ;; options: [
-        ;;      server: « start Grafito as a server
-        ;; ]
-
-        currentNodes: new nodeset
-        currentDataset: new nodeFromIds currentNodes
-
-        Versions: #[
-            engine: to :version first split.by:" " execute "sqlite3 --version"
-            system: Grafito\Version
-            arturo: strip replace execute "arturo -v" ["arturo" "v/"] ""
-        ]
-
-        routes: [
-            GET "/" [
-                render.template app
-            ]
-
-            POST "/startup" [
-                write.json ø #[
-                    title: cleanpath
-                    data: currentDataset
-                    rows: currentNodes
-                    versions: Versions
-                    caseSensitive: Grafito\caseSensitive?
-                    palettes: colorPalettes
-                    activePalette: Grafito\Palette
-                ]
-            ]
-
-            POST "/exec" $[command][
-                try? [
-                    if Grafito\verbose? ->
-                        printDebug "<== " ++ command
-                    currentNodes: ""
-                    bench: benchmark.get [
-                        currentNodes: new do command
-                    ]
+    ;-------------------------- 
+ 
+    unedge: function [ 
+        src :integer 
+        name :literal :string 
+        tgt :integer 
+    ][ 
+        ;; description: « delete edge from source to target node with given name 
+ 
+        performQuery 'unedge deleteEdgeSQL @[name, src, tgt] 
+    ] 
+ 
+    ; 
+    ; Delete existing edge  
+    ; by id 
+    ;-------------------------- 
+ 
+    unedgeById: function [ 
+        eid :integer 
+    ][ 
+        ;; description: « delete edge with given id 
+ 
+        performQuery 'unedgeById deleteEdgeByIdSQL @[eid] 
+    ] 
+ 
+    ; 
+    ; Update single property 
+    ; by id 
+    ;-------------------------- 
+ 
+    editProperty: function [ 
+        nid :integer 
+        prop :literal :string 
+        val :any 
+    ][ 
+        ;; description: « set or update single node property 
+ 
+        performQuery 'editProperty updateNodePropertySQL @[~"$.|prop|", write.compact.json ø val, nid] 
+    ] 
+ 
+    ; 
+    ; Update meta value 
+    ;-------------------------- 
+ 
+    updateMeta: function [ 
+        prop :literal :string 
+        val :any 
+    ][ 
+        ;; description: « update a single meta value 
+ 
+        editProperty 1 prop val 
+    ] 
+ 
+    ; 
+    ; Re-tag existing edge  
+    ; by id 
+    ;-------------------------- 
+ 
+    retagEdge: function [ 
+        eid :integer 
+        tag :literal :string 
+    ][ 
+        ;; description: « update edge with given tag 
+ 
+        performQuery 'retag updateEdgeSQL @[tag, eid] 
+    ] 
+ 
+    ; 
+    ; Get node with properties 
+    ; from ID 
+    ;-------------------------- 
+ 
+    nodeFromId: function [nid][ 
+        results: performQuery 'nodeFromId getNodeSQL @[nid] 
+         
+        if empty? results -> 
+            return ø  
+ 
+        return #[ 
+            id: nid 
+            tag: first first results 
+            properties: read.json last first results 
+        ] 
+    ] 
+ 
+    ; 
+    ; Get nodeset  
+    ; for graph visualization 
+    ;-------------------------- 
+ 
+    nodeFromIds: function [nodes][ 
+        nodeset: nodes 
+        if not? block? nodeset -> 
+            nodeset: @[nodeset] 
+ 
+        nodeElements: map nodeset 'nd -> styleNode nd\id nd\tag nd\properties 
+        edgeElements: new [] 
+ 
+        loop nodeset [nd][ 
+            rezu: performQuery 'nodeFromIds getRelatedNodesSQL @[nd\id, nd\id, nd\id] 
+ 
+            loop rezu [rez][ 
+                'nodeElements ++ styleNode rez\0 rez\1 read.json rez\2 
+                'edgeElements ++ #[ 
+                    id: ~"|rez\3|+|rez\4|+|rez\5|" 
+                    dbId: rez\6 
+                    label: rez\5 
+                    from: to :integer rez\3 
+                    to: to :integer rez\4 
+                ] 
+            ] 
+        ] 
+ 
+        unique 'nodeElements 
+        unique 'edgeElements 
+ 
+        return #[ 
+            nodes: nodeElements 
+            edges: edgeElements 
+        ] 
+    ] 
+ 
+    ; 
+    ; Generate access helper 
+    ;-------------------------- 
+    generateHelper: function [id,block][ 
+        (not? null? attr 'new)? [ 
+            put id block 
+        ][ 
+            fetch id block 
+        ] 
+    ] 
+ 
+    ;========================================== 
+    ; REPL 
+    ;========================================== 
+ 
+    ; 
+    ; Switch verbosity on/off 
+    ;-------------------------- 
+ 
+    verbose: function [] [ 
+        Grafito\verbose?: not? Grafito\verbose? 
+    ] 
+ 
+    ;========================================== 
+    ; METHODS 
+    ;========================================== 
+ 
+    ; 
+    ; Create new node 
+    ;-------------------------- 
+     
+    put: function [ 
+        name :literal :string 
+        attributes :block :dictionary 
+    ][ 
+        ;; description: « insert new node(s) to graph with given name and attributes 
+        ;; options: [ 
+        ;;      unique: « add only if node doesn't already exist 
+        ;;      many: « add multiple nodes at once 
+        ;; ] 
+        ;; returns: :dictionary :block 
+ 
+        if attr "unique" [ 
+            found: fetch name attributes 
+            if not? empty? found -> return found 
+        ] 
+ 
+        result: new [] 
+ 
+        (not? null? attr 'many)? [ 
+            lastId: to :integer first first performQuery 'put getMaxNodeIdSQL ø 
+            queries: new [] 
+            vals: new [] 
+            loop attributes 'nd [ 
+                lastId: lastId + 1 
+                att: nd 
+                if not? dictionary? att -> att: # att 
+                'queries ++ createNodeSQL 
+                'vals ++ @[name, write.compact.json ø att] 
+                'result ++ #[ 
+                    id: lastId 
+                    tag: name 
+                    properties: att 
+                ] 
+            ] 
+            performQuery 'put queries vals 
+ 
+            if Grafito\verbose? -> 
+                 printDebug ~{created |size attributes| nodes} 
+        ] [ 
+            att: attributes 
+            if not? dictionary? att -> att: # att 
+            nodeId: performQuery.id 'put createNodeSQL @[name, write.compact.json ø att] 
+            result: #[ 
+                id: nodeId 
+                tag: name 
+                properties: att 
+            ] 
+ 
+            if Grafito\verbose? -> 
+                printDebug ~{created 1 node (@|nodeId|) with |size att| propert|(1 = size att)? -> "y" -> "ies"|} 
+        ] 
+     
+        return result 
+    ] 
+ 
+    ; 
+    ; Update existing node 
+    ;-------------------------- 
+ 
+    edit: function [ 
+        nd :dictionary :block 
+        attributes :block :dictionary 
+    ][ 
+        ;; description: « update given node(s) with attributes 
+        ;; options: [ 
+        ;;      tag: :literal :string « also set new tag 
+        ;;      replace: « replace entire object properties with given ones 
+        ;; ] 
+        ;; returns: :nothing 
+ 
+        toUpdate: ø 
+ 
+        (dictionary? nd)? -> 
+            toUpdate: @[nd] 
+        -> 
+            toUpdate: new nd 
+ 
+        doReplace?: not? null? attr 'replace 
+        withTag: attr 'tag 
+ 
+        additional: attributes 
+        if block? additional -> 
+            additional: # additional 
+ 
+        loop toUpdate 'updateable [ 
+            newAttributes: ø 
+ 
+            (doReplace?)? -> 
+                newAttributes: additional 
+            -> 
+                newAttributes: extend updateable\properties additional 
+ 
+            updateable\properties: newAttributes 
+            (null? withTag)? -> 
+                performQuery 'edit updateNodePropertiesSQL @[write.compact.json ø newAttributes, updateable\id] 
+            -> 
+                performQuery 'edit updateNodeSQL @[withTag, write.compact.json ø newAttributes, updateable\id] 
+        ] 
+    ] 
+ 
+    ; 
+    ; Delete existing node 
+    ;-------------------------- 
+ 
+    unput: function [ 
+        nd :integer :dictionary :block 
+    ][ 
+        ;; description: « remove given node(s) from graph 
+        ;; returns: :nothing 
+ 
+        toDelete: ø 
+ 
+        (block? nd)? -> 
+            toDelete: new nd 
+        -> 
+            toDelete: @[nd] 
+ 
+        loop toDelete 'deletable [ 
+            nodeId: (dictionary? deletable) ? -> deletable\id -> deletable 
+ 
+            performQuery 'unput @[ 
+                deleteNodeSQL, deleteNodeEdgesSQL 
+            ] @[ 
+                nodeId, nodeId, nodeId 
+            ] 
+        ] 
+    ] 
+ 
+    ; 
+    ; Link nodes with edges 
+    ;-------------------------- 
+ 
+    link: function [ 
+        src :block :dictionary 
+        name :literal :string 
+        tgt :block :dictionary 
+    ] 
+    [ 
+        ;; description: « create a connection from source to target node with given name 
+        ;; returns: :block :dictionary 
+ 
+        edgeId: 0 
+ 
+        (:dictionary = type tgt)? [ 
+            edges: new [] 
+            if :dictionary = type src [ 
+                ret: edge src name tgt 
+                return ret 
+            ] 
+ 
+            sr: @ src 
+            loop sr [s]-> 
+                'edges ++ edge s name tgt 
+         
+            if Grafito\verbose? -> printDebug ~"created |size edges| edges" 
+ 
+            return edges 
+        ][ 
+            edges: new [] 
+            tg: @ tgt 
+            (:dictionary = type src)? [ 
+                loop tg [t][ 
+                    'edges ++ edge src name t 
+                ] 
+            ][ 
+                sr: @ src 
+                loop sr [s] [ 
+                    loop tg [t]-> 
+                        'edges ++ edge s name t 
+                ] 
+            ] 
+ 
+            if Grafito\verbose? -> printDebug ~"created |size edges| edges" 
+ 
+            return edges 
+        ] 
+    ] 
+ 
+    reverseLink: function [ 
+        tgt :block :dictionary 
+        name :literal :string 
+        src :block :dictionary 
+    ][ 
+        link src name tgt 
+    ] 
+ 
+    reciprocalLink: function [ 
+        src :block :dictionary 
+        name :literal :string 
+        tgt :block :dictionary 
+    ][ 
+        link src name tgt 
+        link tgt name src 
+    ] 
+ 
+    ; 
+    ; Delete node edges 
+    ;-------------------------- 
+ 
+    unlink: function [ 
+        src :integer :dictionary :block 
+        name :literal :string 
+        tgt :integer :dictionary :block 
+    ][ 
+        ;; description: « remove connection from source to target node with given name 
+ 
+        nodesFrom: new [] 
+        nodesTo: new [] 
+ 
+        ;case [(type src)=] 
+        (dictionary? src)? -> nodesFrom: @[src\id] 
+        [ 
+            (integer? src)? -> nodesFrom: @[src] 
+            [ 
+                nodesFrom: new map src 'n [ 
+                    (dictionary? n)? -> n\id 
+                    -> n 
+                ] 
+            ] 
+        ] 
+ 
+            ; when? -> :dictionary -> nodesFrom: @[src\id] 
+            ; when? -> :integer -> nodesFrom: @[src] 
+            ; else  -> nodesFrom: new map src 'n [ 
+            ;     if? dictionary? n -> n\id 
+            ;     else -> n 
+            ; ] 
+ 
+        (dictionary? tgt)? -> nodesFrom: @[tgt\id] 
+        [ 
+            (integer? tgt)? -> nodesFrom: @[tgt] 
+            [ 
+                nodesFrom: new map tgt 'n [ 
+                    (dictionary? n)? -> n\id 
+                    -> n 
+                ] 
+            ] 
+        ] 
+ 
+        ; if?case [(type tgt)=] 
+        ;     when? -> :dictionary -> nodesTo: @[tgt\id] 
+        ;     when? -> :integer -> nodesTo: @[tgt] 
+        ;     else  -> nodesTo: new map tgt 'n [ 
+        ;         if? dictionary? n -> n\id 
+        ;         else -> n 
+        ;     ] 
+ 
+        loop nodesFrom 'nf [ 
+            loop nodesTo 'nt [ 
+                unedge nf name nt 
+            ] 
+        ] 
+ 
+        if Grafito\verbose? [ 
+            totalEdges: mul size nodesFrom size nodesTo 
+            edgeLabel: (totalEdges = 1) ? -> "edge" -> "edges" 
+            printDebug ~"removed |totalEdges| |edgeLabel|" 
+        ] 
+    ] 
+ 
+    ; 
+    ; Check node type 
+    ;-------------------------- 
+     
+    isA?: function [ls,nd][ 
+        nd\tag = to :string ls 
+    ] 
+ 
+    ; 
+    ; Fetch all results for tag 
+    ; with given properties 
+    ; and edges 
+    ;-------------------------- 
+ 
+    fetch: function [ 
+        name :literal :string 
+        attributes :null :string :block :dictionary 
+    ][ 
+        ;; description: « retrieves nodes with name that match all given attributes 
+        ;; options: [ 
+        ;;      .any « try matching any of the attributes 
+        ;; ] 
+        ;; returns: :block 
+         
+        ;; setup main variables 
+ 
+        catchAny?: false 
+        if not? null? attr "any" -> 
+            catchAny?: true 
+ 
+        collator: "" 
+        if not? Grafito\caseSensitive? -> 
+            collator: " COLLATE NOCASE" 
+ 
+        propertyFilters: new [] 
+        edgeFilters: new [] 
+        qvals: new @[name] 
+        qpropvals: new [] 
+        qedgevals: new [] 
+ 
+        att: new attributes 
+ 
+        (string? att)? [ 
+            [collate,symb,val]: @[collator, "=", as.code att] 
+             
+            ; add it once (to check for `name`) 
+            'propertyFilters ++ ~propertyWithValueFilter 
+            'qpropvals ++ @[~"$.name"] 
+ 
+            ; add it once more (to check for `title`) 
+            'propertyFilters ++ ~propertyWithValueFilter 
+            'qpropvals ++ @[~"$.title"] 
+ 
+            ; we won't it to be valid when any of the two criteria above is true 
+            ; so we'll have to forcefully set `catchAny?` to true 
+            catchAny?: true 
+        ] 
+        [ 
+            if and? not? dictionary? att  
+                    not? null? att -> 
+                att: # att 
+ 
+            ; ; HACK - to solve 
+            ; remove.key 'att 'n 
+            ; remove.key 'att 'a 
+ 
+            if not? empty? att [ 
+                loop att [k,v][ 
+                    if null? v [ 
+                        ; it's an edge filter without criteria 
+                        'edgeFilters ++ hasEdgeFilter 
+                        'qedgevals ++ @[k] 
+                        continue 
+                    ] 
+                    if dictionary? v [ 
+                        ; it's an edge filter 
+                        'edgeFilters ++ edgeWithTargetFilter 
+                        'qedgevals ++ @[k, v\id] 
+                        continue 
+                    ] 
+                    if block? v [ 
+                        (and? 0 < size v  
+                                :dictionary = type first v)? [ 
+                            ; it's an array of edge filters 
+                            orCriteria: new [] 
+                            loop v [edgef][ 
+                                'orCriteria ++ {!sql (edges.tag=? AND edges.target=?)} 
+                                'qedgevals ++ @[k, edgef\id] 
+                            ] 
+                            'edgeFilters ++ "(" ++ (join.with:" OR " orCriteria) ++ ")" 
+                        ] 
+                        [ 
+                            ; it's a complex property filter 
+                            loop # v [filt,rg][ 
+ 
+                                [collate,symb,val]: @[collator, "=", v] 
+ 
+                                (filt = "contains")? -> [collate,symb,val]: @["", "LIKE", ~"%|rg|%"] 
+                                [ 
+                                    (filt = "prefix")? -> [collate,symb,val]: @["", "LIKE", ~"|rg|%"] 
+                                    [ 
+                                        (filt = "suffix")? -> [collate,symb,val]: @["", "LIKE", ~"%|rg|"] 
+                                        [ 
+                                            (filt = "under")? -> [collate,symb,val]: @["", "<", rg] 
+                                            [ 
+                                                (filt = "over")? -> [collate,symb,val]: @["", ">", rg] 
+                                                [ 
+                                                    (filt = "underOrEqual")? -> [collate,symb,val]: @["", "<=", rg] 
+                                                    [ 
+                                                        (filt = "overOrEqual")? -> [collate,symb,val]: @["", ">=", rg] 
+                                                        [ 
+                                                            (filt = "in")? -> [collate,symb,val]: @[collator, "IN", ~{(|join.with:", " map rg [x]["'" ++ (to :string x) ++ "'"]|)}] 
+                                                            [ 
+                                                                (filt = "not")? [  
+                                                                    (block? rg)?       -> [collate,symb,val]: @[collator, "NOT IN", ~{(|join.with:", " map rg [x]["'" ++ (to :string x) ++ "'"]|)}] 
+                                                                                       -> [collate,symb,val]: @[collator, "!=", rg] 
+                                                                ] 
+                                                                [ 
+                                                                    panic.code: 1 ~"filter: |filt| not recognized" 
+                                                                ] 
+                                                            ] 
+                                                        ] 
+                                                    ] 
+                                                ] 
+                                            ] 
+                                        ] 
+                                    ] 
+                                ] 
+                                ; case [equal? filt] 
+         
+                                ;     when? ["contains"]      -> [collate,symb,val]: @["", "LIKE", ~"%|rg|%"] 
+                                ;     when? ["prefix"]        -> [collate,symb,val]: @["", "LIKE", ~"|rg|%"] 
+                                ;     when? ["suffix"]        -> [collate,symb,val]: @["", "LIKE", ~"%|rg|"] 
+                                ;     when? ["under"]         -> [collate,symb,val]: @["", "<", rg] 
+                                ;     when? ["over"]          -> [collate,symb,val]: @["", ">", rg] 
+                                ;     when? ["underOrEqual"]  -> [collate,symb,val]: @["", "<=", rg] 
+                                ;     when? ["overOrEqual"]   -> [collate,symb,val]: @["", ">=", rg] 
+                                ;     when? ["in"]            -> [collate,symb,val]: @[collator, "IN", ~{(|join.with:", " map rg [x]["'" ++ (to :string x) ++ "'"]|)}] 
+                                ;     when? ["not"][      
+                                ;         if? block? rg       -> [collate,symb,val]: @[collator, "NOT IN", ~{(|join.with:", " map rg [x]["'" ++ (to :string x) ++ "'"]|)}] 
+                                ;         else                -> [collate,symb,val]: @[collator, "!=", rg] 
+                                ;     ] 
+                                ;     else [ 
+                                ;         panic.code: 1 ~"filter: |filt| not recognized" 
+                                ;     ] 
+                                 
+                                val: as.code val 
+                                'propertyFilters ++ ~propertyWithValueFilter 
+                                'qpropvals ++ @[~"$.|k|"] 
+                            ] 
+                        ] 
+                        continue 
+                    ] 
+                    if logical? v [ 
+                        ; it's a simple property filter without criteria 
+                        'propertyFilters ++ hasPropertyFilter 
+                        'qpropvals ++ @[~"$.|k|"] 
+                        continue 
+                    ] 
+                         
+                    ; it's a simple property filter 
+                    [collate,symb,val]: @[collator, "=", as.code v] 
+     
+                    'propertyFilters ++ ~propertyWithValueFilter 
+                    'qpropvals ++ @[~"$.|k|"] 
+                ] 
+            ] 
+        ] 
+ 
+        qr: "" 
+ 
+        propies: "" 
+        linker: " AND " 
+        edgeLimit: ~" = |size edgeFilters|" 
+ 
+        if catchAny? [ 
+            linker: " OR " 
+            edgeLimit: " >= 1" 
+        ] 
+ 
+        if not? empty? propertyFilters [ 
+            propies: ~{!sql AND (|join.with: linker propertyFilters|)} 
+            'qvals ++ qpropvals 
+        ] 
+ 
+        (not? empty? edgeFilters)? [ 
+            edgies: join.with: " OR " edgeFilters 
+            'qvals ++ qedgevals 
+ 
+            qr: ~fetchNodesWithEdgesSQL 
+        ] 
+        [ 
+            qr: ~fetchNodesSQL 
+        ] 
+ 
+        return map performQuery 'fetch qr qvals 'x [ 
+            #[ 
+                id: x\0 
+                tag: x\1 
+                properties: read.json x\2 
+            ] 
+        ] 
+    ] 
+ 
+    ; 
+    ; Visualize given nodeset 
+    ;-------------------------- 
+ 
+    preview: function [ 
+        nodeset :block 
+    ][ 
+        ;; description: « preview given set of nodes in Grafito's UI 
+        ;; options: [ 
+        ;;      server: « start Grafito as a server 
+        ;; ] 
+ 
+        currentNodes: new nodeset 
+        currentDataset: new nodeFromIds currentNodes 
+ 
+        Versions: #[ 
+            engine: to :version first split.by:" " execute "sqlite3 --version" 
+            system: Grafito\Version 
+            arturo: strip replace execute "arturo -v" ["arturo" "v/"] "" 
+        ] 
+ 
+        routes: [ 
+            GET "/" [ 
+                render.template app 
+            ] 
+ 
+            POST "/startup" [ 
+                write.json ø #[ 
+                    title: cleanpath 
+                    data: currentDataset 
+                    rows: currentNodes 
+                    versions: Versions 
+                    caseSensitive: Grafito\caseSensitive? 
+                    palettes: colorPalettes 
+                    activePalette: Grafito\Palette 
+                ] 
+            ] 
+ 
+            POST "/exec" $[command][ 
+                try? [ 
                     if Grafito\verbose? -> 
-                        printDebug ~"==> OK (|bench|)"
-                    (or? [not? block? currentNodes]
-                            [and? [0 < size currentNodes][not? dictionary? first currentNodes]])?[
-                        "empty"
-                    ]
-                    [
-                        currentDataset: new nodeFromIds currentNodes
-                        write.json ø #[
-                            data: currentDataset
-                            rows: currentNodes
-                            timeTaken: scalar bench
-                        ]
-                    ]
-                ]
-                else [
-                    "error"
-                ]
-            ]
-
-            POST "/nodeFromId" $[ndid][
-                newNodes: new nodeFromIds @[nodeFromId ndid]
-                write.json ø newNodes
-            ]
-
-            POST "/changePalette" $[newpalette, ndids][
-                Grafito\Palette: newpalette
-                Grafito\nodeColors: #[]
-                newNodes: new nodeFromIds map split.by:"," ndids => nodeFromId
-                updateMeta 'palette Grafito\Palette
-                updateMeta 'colors Grafito\nodeColors
-                write.json ø newNodes
-            ]
-
-            POST "/deleteNode" $[ndid][
-                unput to :integer ndid
-                ""
-            ]
-
-            POST "/updateNode" $[ndid,newtag,props][
-                nd: nodeFromId ndid
-                edit.replace.tag:newtag nd read.json props
-                ""
-            ]
-
-            POST "/createNode" $[newtag,props][
-                created: put newtag read.json props
-                write.json ø new nodeFromIds created
-            ]
-
-            POST "/linkNodes" $[newtag,src,tgt][
-                srcid: to :integer src
-                tgtid: to :integer tgt
-                edge srcid newtag tgtid
-                ""
-            ]
-
-            POST "/updateEdge" $[egid,newtag][
-                eid: to :integer egid
-                retagEdge eid newtag
-                ""
-            ]
-
-            POST "/deleteEdge" $[egid][
-                edgeParts: split.by:"+" egid
-                unlink to :integer edgeParts\0 
-                       edgeParts\2 
-                       to :integer edgeParts\1
-                ""
-            ]
-
-            POST "/updateEngine" $[caseSensitive][
-                (to :logical caseSensitive)? [
-                    Grafito\caseSensitive?: true
-                    performQuery 'main caseSensitiveLikePragma ø
-                ]
-                [
-                    Grafito\caseSensitive?: false
-                    performQuery 'main caseInsensitiveLikePragma ø
-                ]
-                ""
-            ]
-
-            POST "/analytics" [
-                write.json ø analytics
-            ]
-
-            GET "/styles/(?<file>.+)" $[file][
-                read ~"ui/styles/|file|"
-            ]
-
-            GET "/scripts/(?<file>.+)" $[file][
-                (file = "ace/modes/grafito.js")? 
-                    -> replace read "ui/scripts/ace/modes/grafito.js" 
-                            "CUSTOM_HELPERS" join.with:"|" entities
-                    -> read ~"ui/scripts/|file|"
-            ]
-
-            GET "/exit" [
-                printDebug "Shutting down"
-                close db
-                exit
-            ]
-        ]
-
-        (null? attr 'server)? [
-            serve.chrome routes
-        ]
-        [
-            serve.verbose routes
-        ]
-    ]
-
-    ;==========================================
-    ; INITIALIZATION
-    ;==========================================
-
-    ; basic setup
-    Grafito\verbose?: not? null? attr 'verbose
-    Grafito\caseSensitive?: null? attr 'nocase
-
-    dbPath: ""
-    cleanpath: "in-memory"
-    dbExisted: false
-
-    if not? null? dbpath [
-        cleanpath: extract.filename dbpath
-        dbPath: ~"|cleanpath|.graf"
-        dbExisted: exists? ~"|cleanpath|.graf"
-    ]
-
-    ; setup color palettes
-
-    Grafito\Palette: attr 'palette
-    if null? Grafito\Palette ->
-        Grafito\Palette: "default"
-
-    Grafito\nodeColors: #[]
-
-    ; define aliases
-    alias.infix {~>} 'link
-    alias.infix {<~} 'reverseLink
-    alias.infix {<~>} 'reciprocalLink
-
-    ; open the database
-    printDebug ~"DB = |cleanpath|"
-    db: open dbPath
-
-    dbExists?: true
-
-    ; get helpers
-    entities: attr "helpers"
-    if null? entities -> entities: []
-
-    ; and initialize it
-    ; with the given schema (if necessary)
-    (or? not? null? attr "create"
-            not? dbExisted)? [
-        dbExists?: false 
-        printDebug "creating database from scratch"
-        performQuery.noDebug 'main schemaSQL ø
-        
-        metas: #[]
-
-        set metas 'version "undefined"
-        set metas 'mode "json"
-        set metas 'version Grafito\Version
-        set metas 'palette Grafito\Palette
-        set metas 'entities write.json ø entities
-
-        put'meta metas
-        unstack.discard 1
-    ][
-        printDebug "using existing database"
-        meta: first fetch'meta []
-        
-        Grafito\nodeColors: read.json meta\properties\colors
-        Grafito\Palette: meta\properties\palette
-        entities: read.json meta\properties\entities
-    ]
-
-    ; setup pragmas
-    if Grafito\caseSensitive? ->
-        performQuery 'main caseSensitiveLikePragma ø
-
-    ; create helpers, if any
-    ei: new 0
-    while [ei < size entities] [
-        entity: to :literal entities\[ei]
-        let entity function [block] with 'entity -> generateHelper entity block
-        inc 'ei
-    ]
-
-    ; process body
-    result: do body
-
-    ; close the database
-    close db
-
-    ; and that was it :)
-    return result
-]
-
-;--------------------------
-; The main entry point
-;--------------------------
-
-if standalone? [
-    ; helpers & templates
-
-    Versions: #[
-        engine: to :version first split.by:" " execute "sqlite3 --version"
-        system: script\version
-    ]
-
-    BR: "\n"
-
-    logoTxt: read "logo.txt"
-
-    GrafitoHeader: join @[
-        print color #magenta replace logoTxt {/#(.+)/} (color #white "$1") ++ color.keep #magenta ""
-        print "  "
-        color #gray "-------------------------------------" BR
-        color #gray ~"  system: v/|Versions\system|, engine: v/|Versions\engine|" BR
-        color #gray "-------------------------------------" BR
-    ]
-
-    ; methods
-
-    launchTerminal: function [][
-        completions: ["fetch" "put" "unput" "link" "unlink" "edge" "unedge"]
-        historyPath: join.path @[path\home ".arturo" "grafito-history.lst"]
-
-        print ""
-        print color #orange "## Tip: Type `verbose` to switch info messages on/off"
-        print color #orange "## Launching Grafito console - rock on! 🤘"
-        print ""
-
-        while ø [
-            Got: null
-
-            indentation: ""
-            
-            inp: input .repl
-                    .history: historyPath 
-                    .complete: completions
-                    "$> " 
-
-            while [suffix? inp " "][
-                if suffix? strip inp "[" [
-                    indentation: indentation ++ "\t"
-                ]
-                inp: inp ++ input ".. " ++ indentation
-            ]
-
-            try?.verbose [
-                try.verbose to :block inp
-
-                StackSize: size stack
-                
-                if StackSize > 0 		-> Got: unstack 1
-                if Got <> null 			-> print color #gray ~"=> |Got|"
-
-                print ""
-            ]
-            else [
-                print ""
-            ]
-        ]
-    ]
-
-    ; startup
-
-    print GrafitoHeader
-
-    if 1 < size arg ->
-        panic "Too many arguments given!"
-
-    dbInput: ø
-    if 1 = size arg -> 
-        dbInput: arg\0
-
-    graph dbInput [
-        launchTerminal
-    ]
-]
-
-;==========================================
-; This is the end,
-; my only friend, the end...
-;==========================================
+                        printDebug "<== " ++ command 
+                    currentNodes: "" 
+                    bench: benchmark.get [ 
+                        currentNodes: new do command 
+                    ] 
+                    if Grafito\verbose? ->  
+                        printDebug ~"==> OK (|bench|)" 
+                    (or? [not? block? currentNodes] 
+                            [and? [0 < size currentNodes][not? dictionary? first currentNodes]])?[ 
+                        "empty" 
+                    ] 
+                    [ 
+                        currentDataset: new nodeFromIds currentNodes 
+                        write.json ø #[ 
+                            data: currentDataset 
+                            rows: currentNodes 
+                            timeTaken: scalar bench 
+                        ] 
+                    ] 
+                ] 
+                else [ 
+                    "error" 
+                ] 
+            ] 
+ 
+            POST "/nodeFromId" $[ndid][ 
+                newNodes: new nodeFromIds @[nodeFromId ndid] 
+                write.json ø newNodes 
+            ] 
+ 
+            POST "/changePalette" $[newpalette, ndids][ 
+                Grafito\Palette: newpalette 
+                Grafito\nodeColors: #[] 
+                newNodes: new nodeFromIds map split.by:"," ndids => nodeFromId 
+                updateMeta 'palette Grafito\Palette 
+                updateMeta 'colors Grafito\nodeColors 
+                write.json ø newNodes 
+            ] 
+ 
+            POST "/deleteNode" $[ndid][ 
+                unput to :integer ndid 
+                "" 
+            ] 
+ 
+            POST "/updateNode" $[ndid,newtag,props][ 
+                nd: nodeFromId ndid 
+                edit.replace.tag:newtag nd read.json props 
+                "" 
+            ] 
+ 
+            POST "/createNode" $[newtag,props][ 
+                created: put newtag read.json props 
+                write.json ø new nodeFromIds created 
+            ] 
+ 
+            POST "/linkNodes" $[newtag,src,tgt][ 
+                srcid: to :integer src 
+                tgtid: to :integer tgt 
+                edge srcid newtag tgtid 
+                "" 
+            ] 
+ 
+            POST "/updateEdge" $[egid,newtag][ 
+                eid: to :integer egid 
+                retagEdge eid newtag 
+                "" 
+            ] 
+ 
+            POST "/deleteEdge" $[egid][ 
+                edgeParts: split.by:"+" egid 
+                unlink to :integer edgeParts\0  
+                       edgeParts\2  
+                       to :integer edgeParts\1 
+                "" 
+            ] 
+ 
+            POST "/updateEngine" $[caseSensitive][ 
+                (to :logical caseSensitive)? [ 
+                    Grafito\caseSensitive?: true 
+                    performQuery 'main caseSensitiveLikePragma ø 
+                ] 
+                [ 
+                    Grafito\caseSensitive?: false 
+                    performQuery 'main caseInsensitiveLikePragma ø 
+                ] 
+                "" 
+            ] 
+ 
+            POST "/analytics" [ 
+                write.json ø analytics 
+            ] 
+ 
+            GET "/styles/(?<file>.+)" $[file][ 
+                read ~"ui/styles/|file|" 
+            ] 
+ 
+            GET "/scripts/(?<file>.+)" $[file][ 
+                (file = "ace/modes/grafito.js")?  
+                    -> replace read "ui/scripts/ace/modes/grafito.js"  
+                            "CUSTOM_HELPERS" join.with:"|" entities 
+                    -> read ~"ui/scripts/|file|" 
+            ] 
+ 
+            GET "/exit" [ 
+                printDebug "Shutting down" 
+                close db 
+                exit 
+            ] 
+        ] 
+ 
+        (null? attr 'server)? [ 
+            serve.chrome routes 
+        ] 
+        [ 
+            serve.verbose routes 
+        ] 
+    ] 
+ 
+    ;========================================== 
+    ; INITIALIZATION 
+    ;========================================== 
+ 
+    ; basic setup 
+    Grafito\verbose?: not? null? attr 'verbose 
+    Grafito\caseSensitive?: null? attr 'nocase 
+ 
+    dbPath: "" 
+    cleanpath: "in-memory" 
+    dbExisted: false 
+ 
+    if not? null? dbpath [ 
+        cleanpath: extract.filename dbpath 
+        dbPath: ~"|cleanpath|.graf" 
+        dbExisted: exists? ~"|cleanpath|.graf" 
+    ] 
+ 
+    ; setup color palettes 
+ 
+    Grafito\Palette: attr 'palette 
+    if null? Grafito\Palette -> 
+        Grafito\Palette: "default" 
+ 
+    Grafito\nodeColors: #[] 
+ 
+    ; define aliases 
+    alias.infix {~>} 'link 
+    alias.infix {<~} 'reverseLink 
+    alias.infix {<~>} 'reciprocalLink 
+ 
+    ; open the database 
+    printDebug ~"DB = |cleanpath|" 
+    db: open dbPath 
+ 
+    dbExists?: true 
+ 
+    ; get helpers 
+    entities: attr "helpers" 
+    if null? entities -> entities: [] 
+ 
+    ; and initialize it 
+    ; with the given schema (if necessary) 
+    (or? not? null? attr "create" 
+            not? dbExisted)? [ 
+        dbExists?: false  
+        printDebug "creating database from scratch" 
+        performQuery.noDebug 'main schemaSQL ø 
+         
+        metas: #[] 
+ 
+        set metas 'version "undefined" 
+        set metas 'mode "json" 
+        set metas 'version Grafito\Version 
+        set metas 'palette Grafito\Palette 
+        set metas 'entities write.json ø entities 
+ 
+        put'meta metas 
+        unstack.discard 1 
+    ][ 
+        printDebug "using existing database" 
+        meta: first fetch'meta [] 
+         
+        Grafito\nodeColors: read.json meta\properties\colors 
+        Grafito\Palette: meta\properties\palette 
+        entities: read.json meta\properties\entities 
+    ] 
+ 
+    ; setup pragmas 
+    if Grafito\caseSensitive? -> 
+        performQuery 'main caseSensitiveLikePragma ø 
+ 
+    ; create helpers, if any 
+    ei: new 0 
+    while [ei < size entities] [ 
+        entity: to :literal entities\[ei] 
+        let entity function [block] with 'entity -> generateHelper entity block 
+        inc 'ei 
+    ] 
+ 
+    ; process body 
+    result: do body 
+ 
+    ; close the database 
+    close db 
+ 
+    ; and that was it :) 
+    return result 
+] 
+ 
+;-------------------------- 
+; The main entry point 
+;-------------------------- 
+ 
+if standalone? [ 
+    ; helpers & templates 
+ 
+    Versions: #[ 
+        engine: to :version first split.by:" " execute "sqlite3 --version" 
+        system: Grafito\Version 
+    ] 
+ 
+    BR: "\n" 
+ 
+    logoTxt: read "logo.txt" 
+ 
+    GrafitoHeader: join @[ 
+        color #magenta replace logoTxt {/#(.+)/} (color #white "$1") ++ color.keep #magenta "" BR 
+        "  " BR 
+        color #gray "-------------------------------------" BR 
+        color #gray ~"  system: v/|Versions\system|, engine: v/|Versions\engine|" BR 
+        color #gray "-------------------------------------" BR 
+    ] 
+ 
+    ; methods 
+ 
+    launchTerminal: function [][ 
+        completions: ["fetch" "put" "unput" "link" "unlink" "edge" "unedge"] 
+        historyPath: join.path @[path\home ".arturo" "grafito-history.lst"] 
+ 
+        print "" 
+        print color #orange "## Tip: Type `verbose` to switch info messages on/off" 
+        print color #orange "## Launching Grafito console - rock on! 🤘" 
+        print "" 
+ 
+        while ø [ 
+            Got: null 
+ 
+            indentation: "" 
+             
+            inp: input .repl 
+                    .history: historyPath  
+                    .complete: completions 
+                    "$> "  
+ 
+            while [suffix? inp " "][ 
+                if suffix? strip inp "[" [ 
+                    indentation: indentation ++ "\t" 
+                ] 
+                inp: inp ++ input ".. " ++ indentation 
+            ] 
+ 
+            try?.verbose [ 
+                try.verbose to :block inp 
+ 
+                StackSize: size stack 
+                 
+                if StackSize > 0 		-> Got: unstack 1 
+                if Got <> null 			-> print color #gray ~"=> |Got|" 
+ 
+                print "" 
+            ] 
+            else [ 
+                print "" 
+            ] 
+        ] 
+    ] 
+ 
+    ; startup 
+ 
+    print GrafitoHeader 
+ 
+    if 1 < size arg -> 
+        panic "Too many arguments given!" 
+ 
+    dbInput: ø 
+    if 1 = size arg ->  
+        dbInput: arg\0 
+ 
+    graph dbInput [ 
+        launchTerminal 
+    ] 
+] 
+ 
+;========================================== 
+; This is the end, 
+; my only friend, the end... 
+;========================================== 
