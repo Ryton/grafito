@@ -12,19 +12,13 @@ do [
             ;---------------------------------------------
 	 	
 
-        uk: put'country [name: "United Kingdom"]
-        au: put'country [name: "Australia"]
-        us: put'country [name: "United States"] 
-        ca: put'country [name: "Canada"]
 
+; added thsese 3 after as they were missing, might be wrong?
+	pose499631911:put'pos [p: {noun}]                 
+	pos3722df1028:put'pos [p: {noun}]   
+	lemma8b257cd027: put'lemma [w: [missing] l: {chr}]     
 
-
-pose499631911:put'pos [p: {noun}]                 
-pos3722df1028:put'pos [p: {noun}]   
-; added after, might be wrong
-lemma8b257cd027: put'lemma [w: [missing] l: {chr}]     
-
-
+; original code
 lemma00530c554d: put'lemma [w: {закажува} l: {mk}]               
 lemma01516d0d30: put'lemma [w: {spisać} l: {pl}]               
 lemma02aa35731c: put'lemma [w: {nedskrive} l: {no}]               
@@ -332,6 +326,9 @@ senseda38a026ab: put'sense [s:{to reserve}]
 sensee218329346: put'sense [s:{to record the details of an offender}]            
 sensee629d8b849: put'sense [s:{convenient collection of small paper items, such as stamps}]          
 sensef86f08d2e2: put'sense [s:{collection of sheets of paper bound together containing printed or written material}]       
+
+
+; code updated to new layout
 lemma00530c554d~> 'is pos40bedcde3d
 lemma01516d0d30~> 'is pos12ec563702
 lemma02aa35731c~> 'is posa8ec1ffe68
@@ -637,10 +634,19 @@ posfa7a7ccc22~> 'means senseda38a026ab
 posfdd3b63753~> 'means sense8095a9e6b4
 posfe3151ea95~> 'means sense8095a9e6b4
 
-]
 
-;        preview fetch 'country ø
-        preview fetch'lemma ø
-;        preview fetch' pos	 ø
+; minimal example from sample 4 to test 
+        uk: put'country [name: "United Kingdom"]
+        au: put'country [name: "Australia"]
+
+] ; end unless db exists
+
+
+
+;        preview fetch 'country ø 	; works
+
+	preview fetch 'pos ø	; fails 
+;        preview fetch 'lemma ø 		; fails
+
     ]
 ]
