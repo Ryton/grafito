@@ -15,7 +15,14 @@ do [
     ; Set up a new graph environment
     ; with a local database named "sample1"
     ;---------------------------------------------
-     graph .helpers: [person]
+     graph .helpers: [person toys]
+    ;---------------------------------------------
+    ; a helper creates two aliasses: 
+    ;		<field>.new for put '<field>
+    ;		<field> for fetch '<field>
+
+    ;---------------------------------------------
+
           .create
           .palette: 'default
 	"sample1"
@@ -29,13 +36,39 @@ do [
 		joan: person.new [s: "Joan" sex: 'f] 
 		bob:  person.new [s: "Bob"  sex: 'm] 
 		jill: person.new [s: "Jill" sex: 'f] 
+
+		doll: toys.new [s: "puppet" ] 
+		ball: toys.new [s: "football"] 
             ;---------------------------------------------
             ; Define the relationships
             ; between our nodes
             ;---------------------------------------------
-		joan ~> 'marriedTo john
-		john ~> 'marriedTo joan
-		[bob jill] ~> 'childOf [john joan] 
+		[bob jill] ~> 'childOf [john joan]
+
+		john <~> 'marriedTo joan
+		; <~>  is a  reciprocal link
+		;	joan ~> 'marriedTo john 
+		; 		and
+		;	john ~> 'marriedTo joan
+		
+		; A <~> 'with B
+		; is equivalent to 
+		; reciprocalLink A 'with B equivalent to 
+
+
+		[doll] ~> 'FavouriteToyOf [jill]  
+		; A ~> 'with B 
+		; is equivalent to 
+		; link A 'with B 
+
+		[bob] <~ 'FavouriteToyOf [ball]  
+		; A <~ 'with B
+		; is equivalent to 
+		; reverseLink A 'with B
+		; is equivalent to 
+		; link  B 'with A
+
+
 	] 
 
 
@@ -45,6 +78,10 @@ do [
         ;---------------------------------------------
   
  		preview fetch 'person ø
+ 		; equivalent to 
+		; preview person ø
+		; preview fetch 'person ø
+ 		
  	]
  ]
 
