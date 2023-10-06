@@ -1,0 +1,74 @@
+;---------------------------------------------
+; Import Grafito
+; and ... let's rock'n'roll! :)
+;---------------------------------------------
+do {grafito.art}
+
+do [
+    ;---------------------------------------------
+    ; Set up a new graph environment
+    ; with a local database named "kspobjects"
+    ;---------------------------------------------
+    graph.helpers: [stars planets moons]
+	.create 
+	.palette: 'default
+	"kerbal_space_program_bodies" [
+
+        unless dbExists? [
+            ;---------------------------------------------
+            ; Populate the database
+            ;---------------------------------------------
+	; data to scrape: https://wiki.kerbalspaceprogram.com/wiki/Kerbol_System/Table
+
+        sol: put'stars [name: "Kerbol" ] ; lots of data to populate from scraper
+        outersystem: put'stars [name: "another" ] ; lots of data to populate :
+	;	mass: 22 size, ecc, incl, radius, order;
+		
+
+        moho: put 'planets [name: "Moho" atmosphere: false]
+
+        eve: put 'planets [name: "Eve" atmosphere: true]
+		gilly: put 'moons [name: "Gilly" atmosphere: false]
+		gilly	~> 'orbits eve
+	
+        kb: put 'planets [name: "Kerbin" atmosphere: true]
+		minmus: put 'moons [name: "Minmus" atmosphere: false]
+		mun: put 'moons [name: "Mun" atmosphere: false]
+	[ mun minmus ]	~> 'orbits kb
+
+
+        duna: put 'planets [name: "Duna" atmosphere: true]
+		ike: put 'moons [name: "Ike" atmosphere: false]
+		ike ~> 'orbits duna
+        dres: put 'planets [name: "Dres" atmosphere: false]
+
+        jool: put 'planets [name: "Jool" atmosphere: true]
+		laythe: put 'moons [name: "Laythe" atmosphere: false mass: 22]
+		vall: put 'moons [name: "Vall" atmosphere: false]
+		tylo: put 'moons [name: "Tylo" atmosphere: false]
+		bop: put 'moons [name: "Bop" atmosphere: false]
+		pol: put 'moons [name: "Pol" atmosphere: false]
+		[laythe vall tylo bop pol] ~> 'orbits jool
+
+        eelo: put 'planets [name: "Eelo" atmosphere: false]
+
+	[ moho eve kb duna dres jool eelo  ]	~> 'orbits sol
+
+
+	sol ~> 'adj moho 
+	moho ~> 'adj eve 
+	eve ~> 'adj kb 
+	kb ~> 'adj duna 
+	duna ~> 'adj dres 
+	dres ~> 'adj jool 
+	jool ~> 'adj eelo
+
+
+
+	]
+
+
+
+        preview fetch 'planets ø
+    ]
+]

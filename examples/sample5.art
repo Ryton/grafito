@@ -1,625 +1,646 @@
 do {grafito.art}
 
 do [
-    graph.create
-	.helpers: [lemma person]
+   graph.helpers: [ sense lemma pos ]
+	.create 
 	.palette: 'default
-	 "sample5" [
-        lemma8b257cd027: put 'lemma [w: {book} l: {en}]
-        pos3722df1028: put'pos [p: {noun}]
-        link'is lemma8b257cd027 pos3722df1028
-        sensef86f08d2e2: put'sense [s:{collection of sheets of paper bound together containing printed or written material}]
-        link'means pos3722df1028 sensef86f08d2e2
-        lemma493be85c29: put'lemma [w: {كتاب} l: {apc}]
-        pose499631911: put'pos [p: {noun}]
-        link'is lemma493be85c29 pose499631911
-        link'means pose499631911 sensef86f08d2e2
-        lemma693a742816: put'lemma [w: {ᏗᎪᏪᎵ} l: {chr}]
-        pos22d786790a: put'pos [p: {noun}]
-        link'is lemma693a742816 pos22d786790a
-        link'means pos22d786790a sensef86f08d2e2
-        lemma26fd5156d7: put'lemma [w: {書} l: {gan}]
-        posf6b3172996: put'pos [p: {noun}]
-        link'is lemma26fd5156d7 posf6b3172996
-        link'means posf6b3172996 sensef86f08d2e2
-        lemma9a3a17ffe8: put'lemma [w: {书} l: {gan}]
-        pos9b9ff30210: put'pos [p: {noun}]
-        link'is lemma9a3a17ffe8 pos9b9ff30210
-        link'means pos9b9ff30210 sensef86f08d2e2
-        lemma3027ada842: put'lemma [w: {書} l: {cjy}]
-        pose7e0f1482c: put'pos [p: {noun}]
-        link'is lemma3027ada842 pose7e0f1482c
-        link'means pose7e0f1482c sensef86f08d2e2
-        lemmafb0ebfc12a: put'lemma [w: {书} l: {cjy}]
-        pos83a0d216aa: put'pos [p: {noun}]
-        link'is lemmafb0ebfc12a pos83a0d216aa
-        link'means pos83a0d216aa sensef86f08d2e2
-        lemmafdf3beed04: put'lemma [w: {書} l: {mnp}]
-        pos49fb33a5c6: put'pos [p: {noun}]
-        link'is lemmafdf3beed04 pos49fb33a5c6
-        link'means pos49fb33a5c6 sensef86f08d2e2
-        lemmae8ba2100e7: put'lemma [w: {书} l: {mnp}]
-        pos45b2f78257: put'pos [p: {noun}]
-        link'is lemmae8ba2100e7 pos45b2f78257
-        link'means pos45b2f78257 sensef86f08d2e2
-        lemmabfb684d055: put'lemma [w: {書} l: {hsn}]
-        pos21c619ca73: put'pos [p: {noun}]
-        link'is lemmabfb684d055 pos21c619ca73
-        link'means pos21c619ca73 sensef86f08d2e2
-        lemma49e788e226: put'lemma [w: {书} l: {hsn}]
-        pos53828a28f1: put'pos [p: {noun}]
-        link'is lemma49e788e226 pos53828a28f1
-        link'means pos53828a28f1 sensef86f08d2e2
-        lemma3de6f10595: put'lemma [w: {𞤣𞤫𞤬𞤼𞤫𞤪𞤫} l: {ff}]
-        pos61a1c07120: put'pos [p: {noun}]
-        link'is lemma3de6f10595 pos61a1c07120
-        link'means pos61a1c07120 sensef86f08d2e2
-        lemmadd03b675a5: put'lemma [w: {deftere} l: {ff}]
-        pos2ba9f770dd: put'pos [p: {noun}]
-        link'is lemmadd03b675a5 pos2ba9f770dd
-        link'means pos2ba9f770dd sensef86f08d2e2
-        lemmab6adde549d: put'lemma [w: {ブック} l: {ja}]
-        posefc5173c6e: put'pos [p: {noun}]
-        link'is lemmab6adde549d posefc5173c6e
-        link'means posefc5173c6e sensef86f08d2e2
-        lemma979bc5909e: put'lemma [w: {buku} l: {jv}]
-        pos53c5fefdd3: put'pos [p: {noun}]
-        link'is lemma979bc5909e pos53c5fefdd3
-        link'means pos53c5fefdd3 sensef86f08d2e2
-        lemma77d51b75ed: put'lemma [w: {layang} l: {jv}]
-        pose41277bf28: put'pos [p: {noun}]
-        link'is lemma77d51b75ed pose41277bf28
-        link'means pose41277bf28 sensef86f08d2e2
-        lemmada9979caf2: put'lemma [w: {serat} l: {jv}]
-        pos89453006b2: put'pos [p: {noun}]
-        link'is lemmada9979caf2 pos89453006b2
-        link'means pos89453006b2 sensef86f08d2e2
-        lemmaf9128c3a63: put'lemma [w: {hun} l: {tr}]
-        posc360a20e09: put'pos [p: {noun}]
-        link'is lemmaf9128c3a63 posc360a20e09
-        link'means posc360a20e09 sensef86f08d2e2
-        senseb2f79ce965: put'sense [s:{record of betting}]
-        link'means pos3722df1028 senseb2f79ce965
-        sensee629d8b849: put'sense [s:{convenient collection of small paper items, such as stamps}]
-        link'means pos3722df1028 sensee629d8b849
-        sense92e15899d7: put'sense [s:{major division of a published work, larger than a chapter}]
-        link'means pos3722df1028 sense92e15899d7
-        sensea5f1ab78b7: put'sense [s:{script of a musical}]
-        link'means pos3722df1028 sensea5f1ab78b7
-        sense310968d56f: put'sense [s:{usually in plural: records of the accounts of a business}]
-        link'means pos3722df1028 sense310968d56f
-        pos7f8fc0a70a: put'pos [p: {verb}]
-        link'is lemma8b257cd027 pos7f8fc0a70a
-        senseda38a026ab: put'sense [s:{to reserve}]
-        link'means pos7f8fc0a70a senseda38a026ab
-        lemma5ffab7eaf1: put'lemma [w: {حَجَزَ} l: {ar}]
-        pos8f96b36193: put'pos [p: {verb}]
-        link'is lemma5ffab7eaf1 pos8f96b36193
-        link'means pos8f96b36193 senseda38a026ab
-        lemmab052952b74: put'lemma [w: {запазвам} l: {bg}]
-        pos400e2c04fa: put'pos [p: {verb}]
-        link'is lemmab052952b74 pos400e2c04fa
-        link'means pos400e2c04fa senseda38a026ab
-        lemmac68abfa48d: put'lemma [w: {reservar} l: {ca}]
-        pos718825f926: put'pos [p: {verb}]
-        link'is lemmac68abfa48d pos718825f926
-        link'means pos718825f926 senseda38a026ab
-        lemma99b2986739: put'lemma [w: {預訂} l: {cmn}]
-        pos4cd050d838: put'pos [p: {verb}]
-        link'is lemma99b2986739 pos4cd050d838
-        link'means pos4cd050d838 senseda38a026ab
-        lemmafa2b938743: put'lemma [w: {预订} l: {cmn}]
-        posb4eb4eba86: put'pos [p: {verb}]
-        link'is lemmafa2b938743 posb4eb4eba86
-        link'means posb4eb4eba86 senseda38a026ab
-        lemma0f0d44abcf: put'lemma [w: {rezervovat} l: {cs}]
-        pos162f335187: put'pos [p: {verb}]
-        link'is lemma0f0d44abcf pos162f335187
-        link'means pos162f335187 senseda38a026ab
-        lemmaef137e0718: put'lemma [w: {zarezervovat} l: {cs}]
-        posf6d7b3a598: put'pos [p: {verb}]
-        link'is lemmaef137e0718 posf6d7b3a598
-        link'means posf6d7b3a598 senseda38a026ab
-        lemma2692b18099: put'lemma [w: {zabukovat} l: {cs}]
-        poscc0eb62b54: put'pos [p: {verb}]
-        link'is lemma2692b18099 poscc0eb62b54
-        link'means poscc0eb62b54 senseda38a026ab
-        lemma1654d11c38: put'lemma [w: {reservere} l: {da}]
-        pos9f550e3669: put'pos [p: {verb}]
-        link'is lemma1654d11c38 pos9f550e3669
-        link'means pos9f550e3669 senseda38a026ab
-        lemma3eb280bc1c: put'lemma [w: {bestille} l: {da}]
-        pos269495d662: put'pos [p: {verb}]
-        link'is lemma3eb280bc1c pos269495d662
-        link'means pos269495d662 senseda38a026ab
-        lemmaa5e7be2c82: put'lemma [w: {boeken} l: {nl}]
-        pos9fb854c050: put'pos [p: {verb}]
-        link'is lemmaa5e7be2c82 pos9fb854c050
-        link'means pos9fb854c050 senseda38a026ab
-        lemmac9f87cbf24: put'lemma [w: {reserveren} l: {nl}]
-        pos66b6ed688a: put'pos [p: {verb}]
-        link'is lemmac9f87cbf24 pos66b6ed688a
-        link'means pos66b6ed688a senseda38a026ab
-        lemmabbc5f17f49: put'lemma [w: {rezervi} l: {eo}]
-        pos37d07f5e83: put'pos [p: {verb}]
-        link'is lemmabbc5f17f49 pos37d07f5e83
-        link'means pos37d07f5e83 senseda38a026ab
-        lemmab7f16f3b0b: put'lemma [w: {varata} l: {fi}]
-        pos810ea59d98: put'pos [p: {verb}]
-        link'is lemmab7f16f3b0b pos810ea59d98
-        link'means pos810ea59d98 senseda38a026ab
-        lemmaea73a2348c: put'lemma [w: {tehdä varaus} l: {fi}]
-        pos8c953c4fbb: put'pos [p: {verb}]
-        link'is lemmaea73a2348c pos8c953c4fbb
-        link'means pos8c953c4fbb senseda38a026ab
-        lemmaa6e05310a1: put'lemma [w: {réserver} l: {fr}]
-        posdb48c2f6f9: put'pos [p: {verb}]
-        link'is lemmaa6e05310a1 posdb48c2f6f9
-        link'means posdb48c2f6f9 senseda38a026ab
-        lemma57ee34b617: put'lemma [w: {reservar} l: {gl}]
-        posedc5b0780b: put'pos [p: {verb}]
-        link'is lemma57ee34b617 posedc5b0780b
-        link'means posedc5b0780b senseda38a026ab
-        lemma20e6bcda51: put'lemma [w: {რეგისტრირება} l: {ka}]
-        posa462660823: put'pos [p: {verb}]
-        link'is lemma20e6bcda51 posa462660823
-        link'means posa462660823 senseda38a026ab
-        lemmab7b174e6b7: put'lemma [w: {რეგისტრაციაში გატარება} l: {ka}]
-        pos7f7fb6d403: put'pos [p: {verb}]
-        link'is lemmab7b174e6b7 pos7f7fb6d403
-        link'means pos7f7fb6d403 senseda38a026ab
-        lemmad0bd3f2e5f: put'lemma [w: {დაბრონვა} l: {ka}]
-        pos217871f31e: put'pos [p: {verb}]
-        link'is lemmad0bd3f2e5f pos217871f31e
-        link'means pos217871f31e senseda38a026ab
-        lemma419efd5922: put'lemma [w: {ბრონირება} l: {ka}]
-        pos8f34f3db49: put'pos [p: {verb}]
-        link'is lemma419efd5922 pos8f34f3db49
-        link'means pos8f34f3db49 senseda38a026ab
-        lemma9ce011469e: put'lemma [w: {buchen} l: {de}]
-        posbc3dcacdaa: put'pos [p: {verb}]
-        link'is lemma9ce011469e posbc3dcacdaa
-        link'means posbc3dcacdaa senseda38a026ab
-        lemma4adc255247: put'lemma [w: {reservieren} l: {de}]
-        posabf9ceb9e3: put'pos [p: {verb}]
-        link'is lemma4adc255247 posabf9ceb9e3
-        link'means posabf9ceb9e3 senseda38a026ab
-        lemma8142abc97f: put'lemma [w: {κρατώ} l: {el}]
-        pos29eb57cafc: put'pos [p: {verb}]
-        link'is lemma8142abc97f pos29eb57cafc
-        link'means pos29eb57cafc senseda38a026ab
-        lemma64c115b11d: put'lemma [w: {προκρατ} l: {el}]
-        posf6043dbd1d: put'pos [p: {verb}]
-        link'is lemma64c115b11d posf6043dbd1d
-        link'means posf6043dbd1d senseda38a026ab
-        lemma0c080e4747: put'lemma [w: {κλείνω} l: {el}]
-        pos9be526592e: put'pos [p: {verb}]
-        link'is lemma0c080e4747 pos9be526592e
-        link'means pos9be526592e senseda38a026ab
-        lemma1445c3359b: put'lemma [w: {रिज़र्व करना} l: {hi}]
-        pos2652d23622: put'pos [p: {verb}]
-        link'is lemma1445c3359b pos2652d23622
-        link'means pos2652d23622 senseda38a026ab
-        lemmad879fb0956: put'lemma [w: {lefoglal} l: {hu}]
-        posfa7a7ccc22: put'pos [p: {verb}]
-        link'is lemmad879fb0956 posfa7a7ccc22
-        link'means posfa7a7ccc22 senseda38a026ab
-        lemmad3a1fe2739: put'lemma [w: {foglal} l: {hu}]
-        posc4b80a955a: put'pos [p: {verb}]
-        link'is lemmad3a1fe2739 posc4b80a955a
-        link'means posc4b80a955a senseda38a026ab
-        lemmaf9d257fe1b: put'lemma [w: {megvált} l: {hu}]
-        pos8272261f05: put'pos [p: {verb}]
-        link'is lemmaf9d257fe1b pos8272261f05
-        link'means pos8272261f05 senseda38a026ab
-        lemma0628303c25: put'lemma [w: {vált} l: {hu}]
-        pos91a5d1faa1: put'pos [p: {verb}]
-        link'is lemma0628303c25 pos91a5d1faa1
-        link'means pos91a5d1faa1 senseda38a026ab
-        lemmad664047b50: put'lemma [w: {előjegyez} l: {hu}]
-        pos172fda6753: put'pos [p: {verb}]
-        link'is lemmad664047b50 pos172fda6753
-        link'means pos172fda6753 senseda38a026ab
-        lemma0fcd290db9: put'lemma [w: {pesan} l: {id}]
-        pos3fc7440682: put'pos [p: {verb}]
-        link'is lemma0fcd290db9 pos3fc7440682
-        link'means pos3fc7440682 senseda38a026ab
-        lemma285918e9d7: put'lemma [w: {reservar} l: {ia}]
-        pos71e7aa6831: put'pos [p: {verb}]
-        link'is lemma285918e9d7 pos71e7aa6831
-        link'means pos71e7aa6831 senseda38a026ab
-        lemmab388c1d5f4: put'lemma [w: {cuir in áirithe} l: {ga}]
-        posc087fab3ae: put'pos [p: {verb}]
-        link'is lemmab388c1d5f4 posc087fab3ae
-        link'means posc087fab3ae senseda38a026ab
-        lemma50000a8536: put'lemma [w: {prenotare} l: {it}]
-        pos95467c3689: put'pos [p: {verb}]
-        link'is lemma50000a8536 pos95467c3689
-        link'means pos95467c3689 senseda38a026ab
-        lemmae07803f170: put'lemma [w: {riservare} l: {it}]
-        pos6a7ad647ae: put'pos [p: {verb}]
-        link'is lemmae07803f170 pos6a7ad647ae
-        link'means pos6a7ad647ae senseda38a026ab
-        lemma4452d5f6db: put'lemma [w: {予約する} l: {ja}]
-        pos454ca32c7b: put'pos [p: {verb}]
-        link'is lemma4452d5f6db pos454ca32c7b
-        link'means pos454ca32c7b senseda38a026ab
-        lemma8fcd8726fe: put'lemma [w: {예약하다} l: {ko}]
-        pos4a5a86c7bd: put'pos [p: {verb}]
-        link'is lemma8fcd8726fe pos4a5a86c7bd
-        link'means pos4a5a86c7bd senseda38a026ab
-        lemma2433e61607: put'lemma [w: {豫約} l: {ko}]
-        pos6473e71a0d: put'pos [p: {verb}]
-        link'is lemma2433e61607 pos6473e71a0d
-        link'means pos6473e71a0d senseda38a026ab
-        lemma0b78bda757: put'lemma [w: {하다} l: {ko}]
-        pos1a5ff82ae5: put'pos [p: {verb}]
-        link'is lemma0b78bda757 pos1a5ff82ae5
-        link'means pos1a5ff82ae5 senseda38a026ab
-        lemma9c4463e264: put'lemma [w: {резерви́ра} l: {mk}]
-        pos53276c2faa: put'pos [p: {verb}]
-        link'is lemma9c4463e264 pos53276c2faa
-        link'means pos53276c2faa senseda38a026ab
-        lemma00530c554d: put'lemma [w: {закажува} l: {mk}]
-        pos40bedcde3d: put'pos [p: {verb}]
-        link'is lemma00530c554d pos40bedcde3d
-        link'means pos40bedcde3d senseda38a026ab
-        lemma34f6b2ffdd: put'lemma [w: {tempah} l: {ms}]
-        pos2d7cbe1793: put'pos [p: {verb}]
-        link'is lemma34f6b2ffdd pos2d7cbe1793
-        link'means pos2d7cbe1793 senseda38a026ab
-        lemmad6f29905b6: put'lemma [w: {tāpui} l: {mi}]
-        pos23a68a8d2b: put'pos [p: {verb}]
-        link'is lemmad6f29905b6 pos23a68a8d2b
-        link'means pos23a68a8d2b senseda38a026ab
-        lemmaf698af452b: put'lemma [w: {ukaɗimia} l: {zdj}]
-        pos6e1ac881a5: put'pos [p: {verb}]
-        link'is lemmaf698af452b pos6e1ac881a5
-        link'means pos6e1ac881a5 senseda38a026ab
-        lemmac034b1f0e8: put'lemma [w: {boutchi} l: {nrf}]
-        pos712ca843ca: put'pos [p: {verb}]
-        link'is lemmac034b1f0e8 pos712ca843ca
-        link'means pos712ca843ca senseda38a026ab
-        lemma77255589bd: put'lemma [w: {bestille} l: {no}]
-        posd2ec255c53: put'pos [p: {verb}]
-        link'is lemma77255589bd posd2ec255c53
-        link'means posd2ec255c53 senseda38a026ab
-        lemma0536ef5117: put'lemma [w: {reservere} l: {no}]
-        pos93c775435f: put'pos [p: {verb}]
-        link'is lemma0536ef5117 pos93c775435f
-        link'means pos93c775435f senseda38a026ab
-        lemmafc32ea3c6b: put'lemma [w: {رزرو کردن} l: {fa}]
-        pos75d89b17a4: put'pos [p: {verb}]
-        link'is lemmafc32ea3c6b pos75d89b17a4
-        link'means pos75d89b17a4 senseda38a026ab
-        lemma0d1a467c92: put'lemma [w: {rezerwować} l: {pl}]
-        pos6b76db03c3: put'pos [p: {verb}]
-        link'is lemma0d1a467c92 pos6b76db03c3
-        link'means pos6b76db03c3 senseda38a026ab
-        lemma30625f22fd: put'lemma [w: {zarezerwować} l: {pl}]
-        pos283289ef18: put'pos [p: {verb}]
-        link'is lemma30625f22fd pos283289ef18
-        link'means pos283289ef18 senseda38a026ab
-        lemma7bd6f153d5: put'lemma [w: {bukować} l: {pl}]
-        pos6e5c9329a8: put'pos [p: {verb}]
-        link'is lemma7bd6f153d5 pos6e5c9329a8
-        link'means pos6e5c9329a8 senseda38a026ab
-        lemma5e6b1a766b: put'lemma [w: {zabukować} l: {pl}]
-        pos002a1fcd8e: put'pos [p: {verb}]
-        link'is lemma5e6b1a766b pos002a1fcd8e
-        link'means pos002a1fcd8e senseda38a026ab
-        lemma26b0f4e842: put'lemma [w: {reservar} l: {pt}]
-        pos12c0f1ee7a: put'pos [p: {verb}]
-        link'is lemma26b0f4e842 pos12c0f1ee7a
-        link'means pos12c0f1ee7a senseda38a026ab
-        lemma879ebd4b4c: put'lemma [w: {rezerva} l: {ro}]
-        pos926bdd0d33: put'pos [p: {verb}]
-        link'is lemma879ebd4b4c pos926bdd0d33
-        link'means pos926bdd0d33 senseda38a026ab
-        lemmace2406de31: put'lemma [w: {брони́ровать} l: {ru}]
-        posb84f90110d: put'pos [p: {verb}]
-        link'is lemmace2406de31 posb84f90110d
-        link'means posb84f90110d senseda38a026ab
-        lemmae4ed260f84: put'lemma [w: {заброни́ровать} l: {ru}]
-        pose74deb4481: put'pos [p: {verb}]
-        link'is lemmae4ed260f84 pose74deb4481
-        link'means pose74deb4481 senseda38a026ab
-        lemma8f820f7a26: put'lemma [w: {резерви́ровать} l: {ru}]
-        pos0347e3dc8e: put'pos [p: {verb}]
-        link'is lemma8f820f7a26 pos0347e3dc8e
-        link'means pos0347e3dc8e senseda38a026ab
-        lemma708016700d: put'lemma [w: {зарезерви́ровать} l: {ru}]
-        pos1390c3be31: put'pos [p: {verb}]
-        link'is lemma708016700d pos1390c3be31
-        link'means pos1390c3be31 senseda38a026ab
-        lemma530ab298bb: put'lemma [w: {зака́зывать} l: {ru}]
-        pos7067c6efa1: put'pos [p: {verb}]
-        link'is lemma530ab298bb pos7067c6efa1
-        link'means pos7067c6efa1 senseda38a026ab
-        lemma2b81adebcc: put'lemma [w: {заказа́ть} l: {ru}]
-        poseafb3e54d8: put'pos [p: {verb}]
-        link'is lemma2b81adebcc poseafb3e54d8
-        link'means poseafb3e54d8 senseda38a026ab
-        lemma27f3081168: put'lemma [w: {predbilježiti} l: {sh}]
-        pos2e39921f77: put'pos [p: {verb}]
-        link'is lemma27f3081168 pos2e39921f77
-        link'means pos2e39921f77 senseda38a026ab
-        lemmac390608b64: put'lemma [w: {rezervirati} l: {sh}]
-        pos7ca2e7b7a1: put'pos [p: {verb}]
-        link'is lemmac390608b64 pos7ca2e7b7a1
-        link'means pos7ca2e7b7a1 senseda38a026ab
-        lemma0fa6291cae: put'lemma [w: {rezervovať} l: {sk}]
-        pos27093a6607: put'pos [p: {verb}]
-        link'is lemma0fa6291cae pos27093a6607
-        link'means pos27093a6607 senseda38a026ab
-        lemma9b51132bd5: put'lemma [w: {zarezervovať} l: {sk}]
-        pos3afcdc8775: put'pos [p: {verb}]
-        link'is lemma9b51132bd5 pos3afcdc8775
-        link'means pos3afcdc8775 senseda38a026ab
-        lemmadade0190a1: put'lemma [w: {reservar} l: {es}]
-        pos1a3816d253: put'pos [p: {verb}]
-        link'is lemmadade0190a1 pos1a3816d253
-        link'means pos1a3816d253 senseda38a026ab
-        lemmabe96b9eda9: put'lemma [w: {boka} l: {sv}]
-        pos8abf78a031: put'pos [p: {verb}]
-        link'is lemmabe96b9eda9 pos8abf78a031
-        link'means pos8abf78a031 senseda38a026ab
-        lemma66f4963c8f: put'lemma [w: {yer ayırma} l: {tr}]
-        pos3b7b578927: put'pos [p: {verb}]
-        link'is lemma66f4963c8f pos3b7b578927
-        link'means pos3b7b578927 senseda38a026ab
-        lemma1befa0db9f: put'lemma [w: {kitap} l: {tr}]
-        pos5945f4a88c: put'pos [p: {verb}]
-        link'is lemma1befa0db9f pos5945f4a88c
-        link'means pos5945f4a88c senseda38a026ab
-        lemmab0303cee06: put'lemma [w: {cadw} l: {cy}]
-        pos36d8a0e63e: put'pos [p: {verb}]
-        link'is lemmab0303cee06 pos36d8a0e63e
-        link'means pos36d8a0e63e senseda38a026ab
-        sense8095a9e6b4: put'sense [s:{to write down, register, record}]
-        link'means pos7f8fc0a70a sense8095a9e6b4
-        lemmad852354987: put'lemma [w: {записвам} l: {bg}]
-        pos8819b3eae4: put'pos [p: {verb}]
-        link'is lemmad852354987 pos8819b3eae4
-        link'means pos8819b3eae4 sense8095a9e6b4
-        lemmab005141cd0: put'lemma [w: {anotar} l: {ca}]
-        pos97495274a8: put'pos [p: {verb}]
-        link'is lemmab005141cd0 pos97495274a8
-        link'means pos97495274a8 sense8095a9e6b4
-        lemma0e15b367cc: put'lemma [w: {nedskrive} l: {da}]
-        pos97d056b11a: put'pos [p: {verb}]
-        link'is lemma0e15b367cc pos97d056b11a
-        link'means pos97d056b11a sense8095a9e6b4
-        lemmacdefb85839: put'lemma [w: {notere} l: {da}]
-        posfdd3b63753: put'pos [p: {verb}]
-        link'is lemmacdefb85839 posfdd3b63753
-        link'means posfdd3b63753 sense8095a9e6b4
-        lemmaa25f253805: put'lemma [w: {bogføre} l: {da}]
-        posade3600c74: put'pos [p: {verb}]
-        link'is lemmaa25f253805 posade3600c74
-        link'means posade3600c74 sense8095a9e6b4
-        lemma304f17307c: put'lemma [w: {te boek stellen} l: {nl}]
-        posd31eb16f3f: put'pos [p: {verb}]
-        link'is lemma304f17307c posd31eb16f3f
-        link'means posd31eb16f3f sense8095a9e6b4
-        lemma755a870552: put'lemma [w: {noteren} l: {nl}]
-        pos6fc05d6155: put'pos [p: {verb}]
-        link'is lemma755a870552 pos6fc05d6155
-        link'means pos6fc05d6155 sense8095a9e6b4
-        lemma8b3d7ecf85: put'lemma [w: {kirjoittaa ylös} l: {fi}]
-        pos3c91c6d9bc: put'pos [p: {verb}]
-        link'is lemma8b3d7ecf85 pos3c91c6d9bc
-        link'means pos3c91c6d9bc sense8095a9e6b4
-        lemma2c97454540: put'lemma [w: {kirjata} l: {fi}]
-        posc1827b1993: put'pos [p: {verb}]
-        link'is lemma2c97454540 posc1827b1993
-        link'means posc1827b1993 sense8095a9e6b4
-        lemma7e3ca6f4f8: put'lemma [w: {kirjoittaa muistiin} l: {fi}]
-        pos9e0e710234: put'pos [p: {verb}]
-        link'is lemma7e3ca6f4f8 pos9e0e710234
-        link'means pos9e0e710234 sense8095a9e6b4
-        lemma26cbdd3150: put'lemma [w: {rekisteröidä} l: {fi}]
-        posf3119d023c: put'pos [p: {verb}]
-        link'is lemma26cbdd3150 posf3119d023c
-        link'means posf3119d023c sense8095a9e6b4
-        lemmaf68d609965: put'lemma [w: {anotar} l: {gl}]
-        pos84cd315e51: put'pos [p: {verb}]
-        link'is lemmaf68d609965 pos84cd315e51
-        link'means pos84cd315e51 sense8095a9e6b4
-        lemma0de80bc46e: put'lemma [w: {notieren} l: {de}]
-        pos84a5f64c2e: put'pos [p: {verb}]
-        link'is lemma0de80bc46e pos84a5f64c2e
-        link'means pos84a5f64c2e sense8095a9e6b4
-        lemmaa10d262aaa: put'lemma [w: {schreiben} l: {de}]
-        pos5b1b03041e: put'pos [p: {verb}]
-        link'is lemmaa10d262aaa pos5b1b03041e
-        link'means pos5b1b03041e sense8095a9e6b4
-        lemma540a841c3d: put'lemma [w: {γράφω} l: {el}]
-        pos48be3a8c62: put'pos [p: {verb}]
-        link'is lemma540a841c3d pos48be3a8c62
-        link'means pos48be3a8c62 sense8095a9e6b4
-        lemma7fd4b6db6a: put'lemma [w: {καταχωρώ} l: {el}]
-        posdc3280615b: put'pos [p: {verb}]
-        link'is lemma7fd4b6db6a posdc3280615b
-        link'means posdc3280615b sense8095a9e6b4
-        lemmab7b990a4b0: put'lemma [w: {σημειώνω} l: {el}]
-        pos70c93fbb47: put'pos [p: {verb}]
-        link'is lemmab7b990a4b0 pos70c93fbb47
-        link'means pos70c93fbb47 sense8095a9e6b4
-        lemmaa6b4c7bca1: put'lemma [w: {könyvel} l: {hu}]
-        posb4d1705702: put'pos [p: {verb}]
-        link'is lemmaa6b4c7bca1 posb4d1705702
-        link'means posb4d1705702 sense8095a9e6b4
-        lemmab43710f26b: put'lemma [w: {elkönyvel} l: {hu}]
-        pos0ae342613c: put'pos [p: {verb}]
-        link'is lemmab43710f26b pos0ae342613c
-        link'means pos0ae342613c sense8095a9e6b4
-        lemma0511896480: put'lemma [w: {lekönyvel} l: {hu}]
-        pos3b3b44fb1a: put'pos [p: {verb}]
-        link'is lemma0511896480 pos3b3b44fb1a
-        link'means pos3b3b44fb1a sense8095a9e6b4
-        lemmabce991bde2: put'lemma [w: {annotare} l: {it}]
-        pos5ef4098e1e: put'pos [p: {verb}]
-        link'is lemmabce991bde2 pos5ef4098e1e
-        link'means pos5ef4098e1e sense8095a9e6b4
-        lemma2d43e6f98b: put'lemma [w: {trascrivere} l: {it}]
-        pos939a70c95b: put'pos [p: {verb}]
-        link'is lemma2d43e6f98b pos939a70c95b
-        link'means pos939a70c95b sense8095a9e6b4
-        lemmaa37bb862d6: put'lemma [w: {記入する} l: {ja}]
-        posbac3839f97: put'pos [p: {verb}]
-        link'is lemmaa37bb862d6 posbac3839f97
-        link'means posbac3839f97 sense8095a9e6b4
-        lemma8544784707: put'lemma [w: {внесува} l: {mk}]
-        pos70ca5d74c6: put'pos [p: {verb}]
-        link'is lemma8544784707 pos70ca5d74c6
-        link'means pos70ca5d74c6 sense8095a9e6b4
-        lemma875e7a5bda: put'lemma [w: {запишува} l: {mk}]
-        pose2a009c635: put'pos [p: {verb}]
-        link'is lemma875e7a5bda pose2a009c635
-        link'means pose2a009c635 sense8095a9e6b4
-        lemmaee5012657d: put'lemma [w: {заведува} l: {mk}]
-        posa54755bcaa: put'pos [p: {verb}]
-        link'is lemmaee5012657d posa54755bcaa
-        link'means posa54755bcaa sense8095a9e6b4
-        lemmad70262d4ea: put'lemma [w: {notere} l: {no}]
-        pos358f613c8a: put'pos [p: {verb}]
-        link'is lemmad70262d4ea pos358f613c8a
-        link'means pos358f613c8a sense8095a9e6b4
-        lemma02aa35731c: put'lemma [w: {nedskrive} l: {no}]
-        posa8ec1ffe68: put'pos [p: {verb}]
-        link'is lemma02aa35731c posa8ec1ffe68
-        link'means posa8ec1ffe68 sense8095a9e6b4
-        lemma01516d0d30: put'lemma [w: {spisać} l: {pl}]
-        pos12ec563702: put'pos [p: {verb}]
-        link'is lemma01516d0d30 pos12ec563702
-        link'means pos12ec563702 sense8095a9e6b4
-        lemma2611d0acb7: put'lemma [w: {anotar} l: {pt}]
-        pos869ad4d4c8: put'pos [p: {verb}]
-        link'is lemma2611d0acb7 pos869ad4d4c8
-        link'means pos869ad4d4c8 sense8095a9e6b4
-        lemma115333dd6b: put'lemma [w: {zaznačiť} l: {sk}]
-        pos78a01b223a: put'pos [p: {verb}]
-        link'is lemma115333dd6b pos78a01b223a
-        link'means pos78a01b223a sense8095a9e6b4
-        lemma096b64d995: put'lemma [w: {zaknihovať} l: {sk}]
-        posfe3151ea95: put'pos [p: {verb}]
-        link'is lemma096b64d995 posfe3151ea95
-        link'means posfe3151ea95 sense8095a9e6b4
-        lemma55e473797a: put'lemma [w: {anotar} l: {es}]
-        pos6734388ceb: put'pos [p: {verb}]
-        link'is lemma55e473797a pos6734388ceb
-        link'means pos6734388ceb sense8095a9e6b4
-        lemmaa06d6a035f: put'lemma [w: {bokföra} l: {sv}]
-        pos82f6ae7130: put'pos [p: {verb}]
-        link'is lemmaa06d6a035f pos82f6ae7130
-        link'means pos82f6ae7130 sense8095a9e6b4
-        lemmaef47e75a55: put'lemma [w: {skriva in} l: {sv}]
-        pos9e5da87289: put'pos [p: {verb}]
-        link'is lemmaef47e75a55 pos9e5da87289
-        link'means pos9e5da87289 sense8095a9e6b4
-        sensee218329346: put'sense [s:{to record the details of an offender}]
-        link'means pos7f8fc0a70a sensee218329346
-        lemmad643753534: put'lemma [w: {rekisteröidä} l: {fi}]
-        pos5b8591e2bc: put'pos [p: {verb}]
-        link'is lemmad643753534 pos5b8591e2bc
-        link'means pos5b8591e2bc sensee218329346
-        lemmab34798aa49: put'lemma [w: {felír} l: {hu}]
-        pos76ca843a7f: put'pos [p: {verb}]
-        link'is lemmab34798aa49 pos76ca843a7f
-        link'means pos76ca843a7f sensee218329346
-        lemma2384d799e8: put'lemma [w: {調書を取る} l: {ja}]
-        pos76f69059ac: put'pos [p: {verb}]
-        link'is lemma2384d799e8 pos76f69059ac
-        link'means pos76f69059ac sensee218329346
-        lemma74800b8ba1: put'lemma [w: {multar} l: {pt}]
-        posd2e6f18ffd: put'pos [p: {verb}]
-        link'is lemma74800b8ba1 posd2e6f18ffd
-        link'means posd2e6f18ffd sensee218329346
-        sense5524244560: put'sense [s:{sports: to issue with a caution}]
-        link'means pos7f8fc0a70a sense5524244560
-        lemmac7b383a3e1: put'lemma [w: {varoittaa} l: {fi}]
-        pos0b9995cd5d: put'pos [p: {verb}]
-        link'is lemmac7b383a3e1 pos0b9995cd5d
-        link'means pos0b9995cd5d sense5524244560
-        lemmaa86e7b94de: put'lemma [w: {antaa varoitus} l: {fi}]
-        pos236b000aa1: put'pos [p: {verb}]
-        link'is lemmaa86e7b94de pos236b000aa1
-        link'means pos236b000aa1 sense5524244560
-        lemmaeca039bc89: put'lemma [w: {sárga lapot ad} l: {hu}]
-        pos583dbbd7c1: put'pos [p: {verb}]
-        link'is lemmaeca039bc89 pos583dbbd7c1
-        link'means pos583dbbd7c1 sense5524244560
-        lemmae0276b43f4: put'lemma [w: {ammonire} l: {it}]
-        pos8cff370755: put'pos [p: {verb}]
-        link'is lemmae0276b43f4 pos8cff370755
-        link'means pos8cff370755 sense5524244560
-        sense90edbe61b4: put'sense [s:{slang: to travel very fast}]
-        link'means pos7f8fc0a70a sense90edbe61b4
-        lemma126c5a7bbb: put'lemma [w: {boeken} l: {nl}]
-        posbb935ff58b: put'pos [p: {verb}]
-        link'is lemma126c5a7bbb posbb935ff58b
-        link'means posbb935ff58b sense90edbe61b4
-        lemmab64af5f571: put'lemma [w: {vlammen} l: {nl}]
-        pos8ef07ad582: put'pos [p: {verb}]
-        link'is lemmab64af5f571 pos8ef07ad582
-        link'means pos8ef07ad582 sense90edbe61b4
-        lemmadc7c5c24bd: put'lemma [w: {luukuttaa} l: {fi}]
-        posc384af9d73: put'pos [p: {verb}]
-        link'is lemmadc7c5c24bd posc384af9d73
-        link'means posc384af9d73 sense90edbe61b4
-        lemmaf7717609a3: put'lemma [w: {rasen} l: {de}]
-        pos7b4bf047a5: put'pos [p: {verb}]
-        link'is lemmaf7717609a3 pos7b4bf047a5
-        link'means pos7b4bf047a5 sense90edbe61b4
-        lemma8df31a6b61: put'lemma [w: {száguld} l: {hu}]
-        posdf53c51b96: put'pos [p: {verb}]
-        link'is lemma8df31a6b61 posdf53c51b96
-        link'means posdf53c51b96 sense90edbe61b4
-        lemmac38cd89073: put'lemma [w: {スピードを出す} l: {ja}]
-        pos52af984c8e: put'pos [p: {verb}]
-        link'is lemmac38cd89073 pos52af984c8e
-        link'means pos52af984c8e sense90edbe61b4
-        lemma43a341aeb4: put'lemma [w: {飛ばす} l: {ja}]
-        pos4a27143545: put'pos [p: {verb}]
-        link'is lemma43a341aeb4 pos4a27143545
-        link'means pos4a27143545 sense90edbe61b4
-        sense4ece92bfd9: put'sense [s:{to record bets as bookmaker}]
-        link'means pos7f8fc0a70a sense4ece92bfd9
-        lemmafaa9c8acee: put'lemma [w: {pitää kirjaa} l: {fi}]
-        pos00f8e8942b: put'pos [p: {verb}]
-        link'is lemmafaa9c8acee pos00f8e8942b
-        link'means pos00f8e8942b sense4ece92bfd9
-        sense6ea9e80c3d: put'sense [s:{to receive the highest grade in a class}]
-        link'means pos7f8fc0a70a sense6ea9e80c3d
-        lemmabb32c98866: put'lemma [w: {legjobbként végez} l: {hu}]
-        posb87fd52a1b: put'pos [p: {verb}]
-        link'is lemmabb32c98866 posb87fd52a1b
-        link'means posb87fd52a1b sense6ea9e80c3d
-        sense7b57751785: put'sense [s:{slang: to leave}]
-        link'means pos7f8fc0a70a sense7b57751785
-        lemma37504a71c2: put'lemma [w: {nostaa kytkintä} l: {fi}]
-        pos79f54bd342: put'pos [p: {verb}]
-        link'is lemma37504a71c2 pos79f54bd342
-        link'means pos79f54bd342 sense7b57751785
-        lemma1e895e7987: put'lemma [w: {lelép} l: {hu}]
-        posdf6ca3c753: put'pos [p: {verb}]
-        link'is lemma1e895e7987 posdf6ca3c753
-        link'means posdf6ca3c753 sense7b57751785
-        pos7f8fc0a70a: put'pos [p: {verb}]
-        link'is lemma8b257cd027 pos7f8fc0a70a
-        lemmaceac518675: put 'lemma #[w: {book} l: {li}]
-        posf68c8817db: put'pos [p: {noun}]
-        link'is lemmaceac518675 posf68c8817db
-        lemmac1a1a27858: put 'lemma #[w: {book} l: {enm}]
-        pos0ff9e0a13a: put'pos [p: {noun}]
-        link'is lemmac1a1a27858 pos0ff9e0a13a
-        pos0ff9e0a13a: put'pos [p: {noun}]
-        link'is lemmac1a1a27858 pos0ff9e0a13a
-        lemma3af60c7721: put 'lemma #[w: {book} l: {nb}]
-        pos35c7f973f2: put'pos [p: {verb}]
-        link'is lemma3af60c7721 pos35c7f973f2
 
-        preview fetch'pos ø
+	 "sample5" [
+        unless dbExists? [
+            ;---------------------------------------------
+            ; Populate the database
+            ;---------------------------------------------
+	 	
+
+        uk: put'country [name: "United Kingdom"]
+        au: put'country [name: "Australia"]
+        us: put'country [name: "United States"] 
+        ca: put'country [name: "Canada"]
+
+
+
+pose499631911:put'pos [p: {noun}]                 
+pos3722df1028:put'pos [p: {noun}]   
+; added after, might be wrong
+lemma8b257cd027: put'lemma [w: [missing] l: {chr}]     
+
+
+lemma00530c554d: put'lemma [w: {закажува} l: {mk}]               
+lemma01516d0d30: put'lemma [w: {spisać} l: {pl}]               
+lemma02aa35731c: put'lemma [w: {nedskrive} l: {no}]               
+lemma0511896480: put'lemma [w: {lekönyvel} l: {hu}]               
+lemma0536ef5117: put'lemma [w: {reservere} l: {no}]               
+lemma0628303c25: put'lemma [w: {vált} l: {hu}]               
+lemma096b64d995: put'lemma [w: {zaknihovať} l: {sk}]               
+lemma0b78bda757: put'lemma [w: {하다} l: {ko}]               
+lemma0c080e4747: put'lemma [w: {κλείνω} l: {el}]               
+lemma0d1a467c92: put'lemma [w: {rezerwować} l: {pl}]               
+lemma0de80bc46e: put'lemma [w: {notieren} l: {de}]               
+lemma0e15b367cc: put'lemma [w: {nedskrive} l: {da}]               
+lemma0f0d44abcf: put'lemma [w: {rezervovat} l: {cs}]               
+lemma0fa6291cae: put'lemma [w: {rezervovať} l: {sk}]               
+lemma0fcd290db9: put'lemma [w: {pesan} l: {id}]               
+lemma115333dd6b: put'lemma [w: {zaznačiť} l: {sk}]               
+lemma126c5a7bbb: put'lemma [w: {boeken} l: {nl}]               
+lemma1445c3359b: put'lemma [w: {रिज़र्व करना} l: {hi}]              
+lemma1654d11c38: put'lemma [w: {reservere} l: {da}]               
+lemma1befa0db9f: put'lemma [w: {kitap} l: {tr}]               
+lemma1e895e7987: put'lemma [w: {lelép} l: {hu}]               
+lemma20e6bcda51: put'lemma [w: {რეგისტრირება} l: {ka}]               
+lemma2384d799e8: put'lemma [w: {調書を取る} l: {ja}]               
+lemma2433e61607: put'lemma [w: {豫約} l: {ko}]               
+lemma2611d0acb7: put'lemma [w: {anotar} l: {pt}]               
+lemma2692b18099: put'lemma [w: {zabukovat} l: {cs}]               
+lemma26b0f4e842: put'lemma [w: {reservar} l: {pt}]               
+lemma26cbdd3150: put'lemma [w: {rekisteröidä} l: {fi}]               
+lemma26fd5156d7: put'lemma [w: {書} l: {gan}]               
+lemma27f3081168: put'lemma [w: {predbilježiti} l: {sh}]               
+lemma285918e9d7: put'lemma [w: {reservar} l: {ia}]               
+lemma2b81adebcc: put'lemma [w: {заказа́ть} l: {ru}]               
+lemma2c97454540: put'lemma [w: {kirjata} l: {fi}]               
+lemma2d43e6f98b: put'lemma [w: {trascrivere} l: {it}]               
+lemma3027ada842: put'lemma [w: {書} l: {cjy}]               
+lemma304f17307c: put'lemma [w: {te boek stellen} l: {nl}]             
+lemma30625f22fd: put'lemma [w: {zarezerwować} l: {pl}]               
+lemma34f6b2ffdd: put'lemma [w: {tempah} l: {ms}]               
+lemma37504a71c2: put'lemma [w: {nostaa kytkintä} l: {fi}]              
+lemma3af60c7721: put 'lemma #[w: {book} l: {nb}]              
+lemma3de6f10595: put'lemma [w: {𞤣𞤫𞤬𞤼𞤫𞤪𞤫} l: {ff}]               
+lemma3eb280bc1c: put'lemma [w: {bestille} l: {da}]               
+lemma419efd5922: put'lemma [w: {ბრონირება} l: {ka}]               
+lemma43a341aeb4: put'lemma [w: {飛ばす} l: {ja}]               
+lemma4452d5f6db: put'lemma [w: {予約する} l: {ja}]               
+lemma493be85c29: put'lemma [w: {كتاب} l: {apc}]               
+lemma49e788e226: put'lemma [w: {书} l: {hsn}]               
+lemma4adc255247: put'lemma [w: {reservieren} l: {de}]               
+lemma50000a8536: put'lemma [w: {prenotare} l: {it}]               
+lemma530ab298bb: put'lemma [w: {зака́зывать} l: {ru}]               
+lemma540a841c3d: put'lemma [w: {γράφω} l: {el}]               
+lemma55e473797a: put'lemma [w: {anotar} l: {es}]               
+lemma57ee34b617: put'lemma [w: {reservar} l: {gl}]               
+lemma5e6b1a766b: put'lemma [w: {zabukować} l: {pl}]               
+lemma5ffab7eaf1: put'lemma [w: {حَجَزَ} l: {ar}]               
+lemma64c115b11d: put'lemma [w: {προκρατ} l: {el}]               
+lemma66f4963c8f: put'lemma [w: {yer ayırma} l: {tr}]              
+lemma693a742816: put'lemma [w: {ᏗᎪᏪᎵ} l: {chr}]               
+lemma708016700d: put'lemma [w: {зарезерви́ровать} l: {ru}]               
+lemma74800b8ba1: put'lemma [w: {multar} l: {pt}]               
+lemma755a870552: put'lemma [w: {noteren} l: {nl}]               
+lemma77255589bd: put'lemma [w: {bestille} l: {no}]               
+lemma77d51b75ed: put'lemma [w: {layang} l: {jv}]               
+lemma7bd6f153d5: put'lemma [w: {bukować} l: {pl}]               
+lemma7e3ca6f4f8: put'lemma [w: {kirjoittaa muistiin} l: {fi}]              
+lemma7fd4b6db6a: put'lemma [w: {καταχωρώ} l: {el}]               
+lemma8142abc97f: put'lemma [w: {κρατώ} l: {el}]               
+lemma8544784707: put'lemma [w: {внесува} l: {mk}]               
+lemma875e7a5bda: put'lemma [w: {запишува} l: {mk}]               
+lemma879ebd4b4c: put'lemma [w: {rezerva} l: {ro}]               
+lemma8b3d7ecf85: put'lemma [w: {kirjoittaa ylös} l: {fi}]              
+lemma8df31a6b61: put'lemma [w: {száguld} l: {hu}]               
+lemma8f820f7a26: put'lemma [w: {резерви́ровать} l: {ru}]               
+lemma8fcd8726fe: put'lemma [w: {예약하다} l: {ko}]               
+lemma979bc5909e: put'lemma [w: {buku} l: {jv}]               
+lemma99b2986739: put'lemma [w: {預訂} l: {cmn}]               
+lemma9a3a17ffe8: put'lemma [w: {书} l: {gan}]               
+lemma9b51132bd5: put'lemma [w: {zarezervovať} l: {sk}]               
+lemma9c4463e264: put'lemma [w: {резерви́ра} l: {mk}]               
+lemma9ce011469e: put'lemma [w: {buchen} l: {de}]               
+lemmaa06d6a035f: put'lemma [w: {bokföra} l: {sv}]               
+lemmaa10d262aaa: put'lemma [w: {schreiben} l: {de}]               
+lemmaa25f253805: put'lemma [w: {bogføre} l: {da}]               
+lemmaa37bb862d6: put'lemma [w: {記入する} l: {ja}]               
+lemmaa5e7be2c82: put'lemma [w: {boeken} l: {nl}]               
+lemmaa6b4c7bca1: put'lemma [w: {könyvel} l: {hu}]               
+lemmaa6e05310a1: put'lemma [w: {réserver} l: {fr}]               
+lemmaa86e7b94de: put'lemma [w: {antaa varoitus} l: {fi}]              
+lemmab005141cd0: put'lemma [w: {anotar} l: {ca}]               
+lemmab0303cee06: put'lemma [w: {cadw} l: {cy}]               
+lemmab052952b74: put'lemma [w: {запазвам} l: {bg}]               
+lemmab34798aa49: put'lemma [w: {felír} l: {hu}]               
+lemmab388c1d5f4: put'lemma [w: {cuir in áirithe} l: {ga}]             
+lemmab43710f26b: put'lemma [w: {elkönyvel} l: {hu}]               
+lemmab64af5f571: put'lemma [w: {vlammen} l: {nl}]               
+lemmab6adde549d: put'lemma [w: {ブック} l: {ja}]               
+lemmab7b174e6b7: put'lemma [w: {რეგისტრაციაში გატარება} l: {ka}]              
+lemmab7b990a4b0: put'lemma [w: {σημειώνω} l: {el}]               
+lemmab7f16f3b0b: put'lemma [w: {varata} l: {fi}]               
+lemmabb32c98866: put'lemma [w: {legjobbként végez} l: {hu}]              
+lemmabbc5f17f49: put'lemma [w: {rezervi} l: {eo}]               
+lemmabce991bde2: put'lemma [w: {annotare} l: {it}]               
+lemmabe96b9eda9: put'lemma [w: {boka} l: {sv}]               
+lemmabfb684d055: put'lemma [w: {書} l: {hsn}]               
+lemmac034b1f0e8: put'lemma [w: {boutchi} l: {nrf}]               
+lemmac1a1a27858: put 'lemma #[w: {book} l: {enm}]              
+lemmac38cd89073: put'lemma [w: {スピードを出す} l: {ja}]               
+lemmac390608b64: put'lemma [w: {rezervirati} l: {sh}]               
+lemmac68abfa48d: put'lemma [w: {reservar} l: {ca}]               
+lemmac7b383a3e1: put'lemma [w: {varoittaa} l: {fi}]               
+lemmac9f87cbf24: put'lemma [w: {reserveren} l: {nl}]               
+lemmacdefb85839: put'lemma [w: {notere} l: {da}]               
+lemmace2406de31: put'lemma [w: {брони́ровать} l: {ru}]               
+lemmaceac518675: put 'lemma #[w: {book} l: {li}]              
+lemmad0bd3f2e5f: put'lemma [w: {დაბრონვა} l: {ka}]               
+lemmad3a1fe2739: put'lemma [w: {foglal} l: {hu}]               
+lemmad643753534: put'lemma [w: {rekisteröidä} l: {fi}]               
+lemmad664047b50: put'lemma [w: {előjegyez} l: {hu}]               
+lemmad6f29905b6: put'lemma [w: {tāpui} l: {mi}]               
+lemmad70262d4ea: put'lemma [w: {notere} l: {no}]               
+lemmad852354987: put'lemma [w: {записвам} l: {bg}]               
+lemmad879fb0956: put'lemma [w: {lefoglal} l: {hu}]               
+lemmada9979caf2: put'lemma [w: {serat} l: {jv}]               
+lemmadade0190a1: put'lemma [w: {reservar} l: {es}]               
+lemmadc7c5c24bd: put'lemma [w: {luukuttaa} l: {fi}]               
+lemmadd03b675a5: put'lemma [w: {deftere} l: {ff}]               
+lemmae0276b43f4: put'lemma [w: {ammonire} l: {it}]               
+lemmae07803f170: put'lemma [w: {riservare} l: {it}]               
+lemmae4ed260f84: put'lemma [w: {заброни́ровать} l: {ru}]               
+lemmae8ba2100e7: put'lemma [w: {书} l: {mnp}]               
+lemmaea73a2348c: put'lemma [w: {tehdä varaus} l: {fi}]              
+lemmaeca039bc89: put'lemma [w: {sárga lapot ad} l: {hu}]             
+lemmaee5012657d: put'lemma [w: {заведува} l: {mk}]               
+lemmaef137e0718: put'lemma [w: {zarezervovat} l: {cs}]               
+lemmaef47e75a55: put'lemma [w: {skriva in} l: {sv}]              
+lemmaf68d609965: put'lemma [w: {anotar} l: {gl}]               
+lemmaf698af452b: put'lemma [w: {ukaɗimia} l: {zdj}]               
+lemmaf7717609a3: put'lemma [w: {rasen} l: {de}]               
+lemmaf9128c3a63: put'lemma [w: {hun} l: {tr}]               
+lemmaf9d257fe1b: put'lemma [w: {megvált} l: {hu}]               
+lemmafa2b938743: put'lemma [w: {预订} l: {cmn}]               
+lemmafaa9c8acee: put'lemma [w: {pitää kirjaa} l: {fi}]              
+lemmafb0ebfc12a: put'lemma [w: {书} l: {cjy}]               
+lemmafc32ea3c6b: put'lemma [w: {رزرو کردن} l: {fa}]              
+lemmafdf3beed04: put'lemma [w: {書} l: {mnp}]               
+pos002a1fcd8e: put'pos [p: {verb}]                 
+pos00f8e8942b: put'pos [p: {verb}]                 
+pos0347e3dc8e: put'pos [p: {verb}]                 
+pos0ae342613c: put'pos [p: {verb}]                 
+pos0b9995cd5d: put'pos [p: {verb}]                 
+pos0ff9e0a13a: put'pos [p: {noun}]                 
+pos0ff9e0a13a: put'pos [p: {noun}]                 
+pos12c0f1ee7a: put'pos [p: {verb}]                 
+pos12ec563702: put'pos [p: {verb}]                 
+pos1390c3be31: put'pos [p: {verb}]                 
+pos162f335187: put'pos [p: {verb}]                 
+pos172fda6753: put'pos [p: {verb}]                 
+pos1a3816d253: put'pos [p: {verb}]                 
+pos1a5ff82ae5: put'pos [p: {verb}]                 
+pos217871f31e: put'pos [p: {verb}]                 
+pos21c619ca73: put'pos [p: {noun}]                 
+pos22d786790a: put'pos [p: {noun}]                 
+pos236b000aa1: put'pos [p: {verb}]                 
+pos23a68a8d2b: put'pos [p: {verb}]                 
+pos2652d23622: put'pos [p: {verb}]                 
+pos269495d662: put'pos [p: {verb}]                 
+pos27093a6607: put'pos [p: {verb}]                 
+pos283289ef18: put'pos [p: {verb}]                 
+pos29eb57cafc: put'pos [p: {verb}]                 
+pos2ba9f770dd: put'pos [p: {noun}]                 
+pos2d7cbe1793: put'pos [p: {verb}]                 
+pos2e39921f77: put'pos [p: {verb}]                 
+pos358f613c8a: put'pos [p: {verb}]                 
+pos35c7f973f2: put'pos [p: {verb}]                 
+pos36d8a0e63e: put'pos [p: {verb}]                 
+pos37d07f5e83: put'pos [p: {verb}]                 
+pos3afcdc8775: put'pos [p: {verb}]                 
+pos3b3b44fb1a: put'pos [p: {verb}]                 
+pos3b7b578927: put'pos [p: {verb}]                 
+pos3c91c6d9bc: put'pos [p: {verb}]                 
+pos3fc7440682: put'pos [p: {verb}]                 
+pos400e2c04fa: put'pos [p: {verb}]                 
+pos40bedcde3d: put'pos [p: {verb}]                 
+pos454ca32c7b: put'pos [p: {verb}]                 
+pos45b2f78257: put'pos [p: {noun}]                 
+pos48be3a8c62: put'pos [p: {verb}]                 
+pos49fb33a5c6: put'pos [p: {noun}]                 
+pos4a27143545: put'pos [p: {verb}]                 
+pos4a5a86c7bd: put'pos [p: {verb}]                 
+pos4cd050d838: put'pos [p: {verb}]                 
+pos52af984c8e: put'pos [p: {verb}]                 
+pos53276c2faa: put'pos [p: {verb}]                 
+pos53828a28f1: put'pos [p: {noun}]                 
+pos53c5fefdd3: put'pos [p: {noun}]                 
+pos583dbbd7c1: put'pos [p: {verb}]                 
+pos5945f4a88c: put'pos [p: {verb}]                 
+pos5b1b03041e: put'pos [p: {verb}]                 
+pos5b8591e2bc: put'pos [p: {verb}]                 
+pos5ef4098e1e: put'pos [p: {verb}]                 
+pos61a1c07120: put'pos [p: {noun}]                 
+pos6473e71a0d: put'pos [p: {verb}]                 
+pos66b6ed688a: put'pos [p: {verb}]                 
+pos6734388ceb: put'pos [p: {verb}]                 
+pos6a7ad647ae: put'pos [p: {verb}]                 
+pos6b76db03c3: put'pos [p: {verb}]                 
+pos6e1ac881a5: put'pos [p: {verb}]                 
+pos6e5c9329a8: put'pos [p: {verb}]                 
+pos6fc05d6155: put'pos [p: {verb}]                 
+pos7067c6efa1: put'pos [p: {verb}]                 
+pos70c93fbb47: put'pos [p: {verb}]                 
+pos70ca5d74c6: put'pos [p: {verb}]                 
+pos712ca843ca: put'pos [p: {verb}]                 
+pos718825f926: put'pos [p: {verb}]                 
+pos71e7aa6831: put'pos [p: {verb}]                 
+pos75d89b17a4: put'pos [p: {verb}]                 
+pos76ca843a7f: put'pos [p: {verb}]                 
+pos76f69059ac: put'pos [p: {verb}]                 
+pos78a01b223a: put'pos [p: {verb}]                 
+pos79f54bd342: put'pos [p: {verb}]                 
+pos7b4bf047a5: put'pos [p: {verb}]                 
+pos7ca2e7b7a1: put'pos [p: {verb}]                 
+pos7f7fb6d403: put'pos [p: {verb}]                 
+pos7f8fc0a70a: put'pos [p: {verb}]                 
+pos7f8fc0a70a: put'pos [p: {verb}]                 
+pos810ea59d98: put'pos [p: {verb}]                 
+pos8272261f05: put'pos [p: {verb}]                 
+pos82f6ae7130: put'pos [p: {verb}]                 
+pos83a0d216aa: put'pos [p: {noun}]                 
+pos84a5f64c2e: put'pos [p: {verb}]                 
+pos84cd315e51: put'pos [p: {verb}]                 
+pos869ad4d4c8: put'pos [p: {verb}]                 
+pos8819b3eae4: put'pos [p: {verb}]                 
+pos89453006b2: put'pos [p: {noun}]                 
+pos8abf78a031: put'pos [p: {verb}]                 
+pos8c953c4fbb: put'pos [p: {verb}]                 
+pos8cff370755: put'pos [p: {verb}]                 
+pos8ef07ad582: put'pos [p: {verb}]                 
+pos8f34f3db49: put'pos [p: {verb}]                 
+pos8f96b36193: put'pos [p: {verb}]                 
+pos91a5d1faa1: put'pos [p: {verb}]                 
+pos926bdd0d33: put'pos [p: {verb}]                 
+pos939a70c95b: put'pos [p: {verb}]                 
+pos93c775435f: put'pos [p: {verb}]                 
+pos95467c3689: put'pos [p: {verb}]                 
+pos97495274a8: put'pos [p: {verb}]                 
+pos97d056b11a: put'pos [p: {verb}]                 
+pos9b9ff30210: put'pos [p: {noun}]                 
+pos9be526592e: put'pos [p: {verb}]                 
+pos9e0e710234: put'pos [p: {verb}]                 
+pos9e5da87289: put'pos [p: {verb}]                 
+pos9f550e3669: put'pos [p: {verb}]                 
+pos9fb854c050: put'pos [p: {verb}]                 
+posa462660823: put'pos [p: {verb}]                 
+posa54755bcaa: put'pos [p: {verb}]                 
+posa8ec1ffe68: put'pos [p: {verb}]                 
+posabf9ceb9e3: put'pos [p: {verb}]                 
+posade3600c74: put'pos [p: {verb}]                 
+posb4d1705702: put'pos [p: {verb}]                 
+posb4eb4eba86: put'pos [p: {verb}]                 
+posb84f90110d: put'pos [p: {verb}]                 
+posb87fd52a1b: put'pos [p: {verb}]                 
+posbac3839f97: put'pos [p: {verb}]                 
+posbb935ff58b: put'pos [p: {verb}]                 
+posbc3dcacdaa: put'pos [p: {verb}]                 
+posc087fab3ae: put'pos [p: {verb}]                 
+posc1827b1993: put'pos [p: {verb}]                 
+posc360a20e09: put'pos [p: {noun}]                 
+posc384af9d73: put'pos [p: {verb}]                 
+posc4b80a955a: put'pos [p: {verb}]                 
+poscc0eb62b54: put'pos [p: {verb}]                 
+posd2e6f18ffd: put'pos [p: {verb}]                 
+posd2ec255c53: put'pos [p: {verb}]                 
+posd31eb16f3f: put'pos [p: {verb}]                 
+posdb48c2f6f9: put'pos [p: {verb}]                 
+posdc3280615b: put'pos [p: {verb}]                 
+posdf53c51b96: put'pos [p: {verb}]                 
+posdf6ca3c753: put'pos [p: {verb}]                 
+pose2a009c635: put'pos [p: {verb}]                 
+pose41277bf28: put'pos [p: {noun}]                 
+pose499631911: put'pos [p: {noun}]                 
+pose74deb4481: put'pos [p: {verb}]                 
+pose7e0f1482c: put'pos [p: {noun}]                 
+poseafb3e54d8: put'pos [p: {verb}]                 
+posedc5b0780b: put'pos [p: {verb}]                 
+posefc5173c6e: put'pos [p: {noun}]                 
+posf3119d023c: put'pos [p: {verb}]                 
+posf6043dbd1d: put'pos [p: {verb}]                 
+posf68c8817db: put'pos [p: {noun}]                 
+posf6b3172996: put'pos [p: {noun}]                 
+posf6d7b3a598: put'pos [p: {verb}]                 
+posfa7a7ccc22: put'pos [p: {verb}]                 
+posfdd3b63753: put'pos [p: {verb}]                 
+posfe3151ea95: put'pos [p: {verb}]                 
+sense310968d56f: put'sense [s:{usually in plural: records of the accounts of a business}]         
+sense4ece92bfd9: put'sense [s:{to record bets as bookmaker}]              
+sense5524244560: put'sense [s:{sports: to issue with a caution}]             
+sense6ea9e80c3d: put'sense [s:{to receive the highest grade in a class}]           
+sense7b57751785: put'sense [s:{slang: to leave}]                
+sense8095a9e6b4: put'sense [s:{to write down, register, record}]              
+sense90edbe61b4: put'sense [s:{slang: to travel very fast}]              
+sense92e15899d7: put'sense [s:{major division of a published work, larger than a chapter}]         
+sensea5f1ab78b7: put'sense [s:{script of a musical}]               
+senseb2f79ce965: put'sense [s:{record of betting}]                
+senseda38a026ab: put'sense [s:{to reserve}]                 
+sensee218329346: put'sense [s:{to record the details of an offender}]            
+sensee629d8b849: put'sense [s:{convenient collection of small paper items, such as stamps}]          
+sensef86f08d2e2: put'sense [s:{collection of sheets of paper bound together containing printed or written material}]       
+lemma00530c554d~> 'is pos40bedcde3d
+lemma01516d0d30~> 'is pos12ec563702
+lemma02aa35731c~> 'is posa8ec1ffe68
+lemma0511896480~> 'is pos3b3b44fb1a
+lemma0536ef5117~> 'is pos93c775435f
+lemma0628303c25~> 'is pos91a5d1faa1
+lemma096b64d995~> 'is posfe3151ea95
+lemma0b78bda757~> 'is pos1a5ff82ae5
+lemma0c080e4747~> 'is pos9be526592e
+lemma0d1a467c92~> 'is pos6b76db03c3
+lemma0de80bc46e~> 'is pos84a5f64c2e
+lemma0e15b367cc~> 'is pos97d056b11a
+lemma0f0d44abcf~> 'is pos162f335187
+lemma0fa6291cae~> 'is pos27093a6607
+lemma0fcd290db9~> 'is pos3fc7440682
+lemma115333dd6b~> 'is pos78a01b223a
+lemma126c5a7bbb~> 'is posbb935ff58b
+lemma1445c3359b~> 'is pos2652d23622
+lemma1654d11c38~> 'is pos9f550e3669
+lemma1befa0db9f~> 'is pos5945f4a88c
+lemma1e895e7987~> 'is posdf6ca3c753
+lemma20e6bcda51~> 'is posa462660823
+lemma2384d799e8~> 'is pos76f69059ac
+lemma2433e61607~> 'is pos6473e71a0d
+lemma2611d0acb7~> 'is pos869ad4d4c8
+lemma2692b18099~> 'is poscc0eb62b54
+lemma26b0f4e842~> 'is pos12c0f1ee7a
+lemma26cbdd3150~> 'is posf3119d023c
+lemma26fd5156d7~> 'is posf6b3172996
+lemma27f3081168~> 'is pos2e39921f77
+lemma285918e9d7~> 'is pos71e7aa6831
+lemma2b81adebcc~> 'is poseafb3e54d8
+lemma2c97454540~> 'is posc1827b1993
+lemma2d43e6f98b~> 'is pos939a70c95b
+lemma3027ada842~> 'is pose7e0f1482c
+lemma304f17307c~> 'is posd31eb16f3f
+lemma30625f22fd~> 'is pos283289ef18
+lemma34f6b2ffdd~> 'is pos2d7cbe1793
+lemma37504a71c2~> 'is pos79f54bd342
+lemma3af60c7721~> 'is pos35c7f973f2
+lemma3de6f10595~> 'is pos61a1c07120
+lemma3eb280bc1c~> 'is pos269495d662
+lemma419efd5922~> 'is pos8f34f3db49
+lemma43a341aeb4~> 'is pos4a27143545
+lemma4452d5f6db~> 'is pos454ca32c7b
+lemma493be85c29~> 'is pose499631911
+lemma49e788e226~> 'is pos53828a28f1
+lemma4adc255247~> 'is posabf9ceb9e3
+lemma50000a8536~> 'is pos95467c3689
+lemma530ab298bb~> 'is pos7067c6efa1
+lemma540a841c3d~> 'is pos48be3a8c62
+lemma55e473797a~> 'is pos6734388ceb
+lemma57ee34b617~> 'is posedc5b0780b
+lemma5e6b1a766b~> 'is pos002a1fcd8e
+lemma5ffab7eaf1~> 'is pos8f96b36193
+lemma64c115b11d~> 'is posf6043dbd1d
+lemma66f4963c8f~> 'is pos3b7b578927
+lemma693a742816~> 'is pos22d786790a
+lemma708016700d~> 'is pos1390c3be31
+lemma74800b8ba1~> 'is posd2e6f18ffd
+lemma755a870552~> 'is pos6fc05d6155
+lemma77255589bd~> 'is posd2ec255c53
+lemma77d51b75ed~> 'is pose41277bf28
+lemma7bd6f153d5~> 'is pos6e5c9329a8
+lemma7e3ca6f4f8~> 'is pos9e0e710234
+lemma7fd4b6db6a~> 'is posdc3280615b
+lemma8142abc97f~> 'is pos29eb57cafc
+lemma8544784707~> 'is pos70ca5d74c6
+lemma875e7a5bda~> 'is pose2a009c635
+lemma879ebd4b4c~> 'is pos926bdd0d33
+lemma8b257cd027~> 'is pos7f8fc0a70a
+lemma8b257cd027~> 'is pos7f8fc0a70a
+lemma8b3d7ecf85~> 'is pos3c91c6d9bc
+lemma8df31a6b61~> 'is posdf53c51b96
+lemma8f820f7a26~> 'is pos0347e3dc8e
+lemma8fcd8726fe~> 'is pos4a5a86c7bd
+lemma979bc5909e~> 'is pos53c5fefdd3
+lemma99b2986739~> 'is pos4cd050d838
+lemma9a3a17ffe8~> 'is pos9b9ff30210
+lemma9b51132bd5~> 'is pos3afcdc8775
+lemma9c4463e264~> 'is pos53276c2faa
+lemma9ce011469e~> 'is posbc3dcacdaa
+lemmaa06d6a035f~> 'is pos82f6ae7130
+lemmaa10d262aaa~> 'is pos5b1b03041e
+lemmaa25f253805~> 'is posade3600c74
+lemmaa37bb862d6~> 'is posbac3839f97
+lemmaa5e7be2c82~> 'is pos9fb854c050
+lemmaa6b4c7bca1~> 'is posb4d1705702
+lemmaa6e05310a1~> 'is posdb48c2f6f9
+lemmaa86e7b94de~> 'is pos236b000aa1
+lemmab005141cd0~> 'is pos97495274a8
+lemmab0303cee06~> 'is pos36d8a0e63e
+lemmab052952b74~> 'is pos400e2c04fa
+lemmab34798aa49~> 'is pos76ca843a7f
+lemmab388c1d5f4~> 'is posc087fab3ae
+lemmab43710f26b~> 'is pos0ae342613c
+lemmab64af5f571~> 'is pos8ef07ad582
+lemmab6adde549d~> 'is posefc5173c6e
+lemmab7b174e6b7~> 'is pos7f7fb6d403
+lemmab7b990a4b0~> 'is pos70c93fbb47
+lemmab7f16f3b0b~> 'is pos810ea59d98
+lemmabb32c98866~> 'is posb87fd52a1b
+lemmabbc5f17f49~> 'is pos37d07f5e83
+lemmabce991bde2~> 'is pos5ef4098e1e
+lemmabe96b9eda9~> 'is pos8abf78a031
+lemmabfb684d055~> 'is pos21c619ca73
+lemmac034b1f0e8~> 'is pos712ca843ca
+lemmac1a1a27858~> 'is pos0ff9e0a13a
+lemmac1a1a27858~> 'is pos0ff9e0a13a
+lemmac38cd89073~> 'is pos52af984c8e
+lemmac390608b64~> 'is pos7ca2e7b7a1
+lemmac68abfa48d~> 'is pos718825f926
+lemmac7b383a3e1~> 'is pos0b9995cd5d
+lemmac9f87cbf24~> 'is pos66b6ed688a
+lemmacdefb85839~> 'is posfdd3b63753
+lemmace2406de31~> 'is posb84f90110d
+lemmaceac518675~> 'is posf68c8817db
+lemmad0bd3f2e5f~> 'is pos217871f31e
+lemmad3a1fe2739~> 'is posc4b80a955a
+lemmad643753534~> 'is pos5b8591e2bc
+lemmad664047b50~> 'is pos172fda6753
+lemmad6f29905b6~> 'is pos23a68a8d2b
+lemmad70262d4ea~> 'is pos358f613c8a
+lemmad852354987~> 'is pos8819b3eae4
+lemmad879fb0956~> 'is posfa7a7ccc22
+lemmada9979caf2~> 'is pos89453006b2
+lemmadade0190a1~> 'is pos1a3816d253
+lemmadc7c5c24bd~> 'is posc384af9d73
+lemmadd03b675a5~> 'is pos2ba9f770dd
+lemmae0276b43f4~> 'is pos8cff370755
+lemmae07803f170~> 'is pos6a7ad647ae
+lemmae4ed260f84~> 'is pose74deb4481
+lemmae8ba2100e7~> 'is pos45b2f78257
+lemmaea73a2348c~> 'is pos8c953c4fbb
+lemmaeca039bc89~> 'is pos583dbbd7c1
+lemmaee5012657d~> 'is posa54755bcaa
+lemmaef137e0718~> 'is posf6d7b3a598
+lemmaef47e75a55~> 'is pos9e5da87289
+lemmaf68d609965~> 'is pos84cd315e51
+lemmaf698af452b~> 'is pos6e1ac881a5
+lemmaf7717609a3~> 'is pos7b4bf047a5
+lemmaf9128c3a63~> 'is posc360a20e09
+lemmaf9d257fe1b~> 'is pos8272261f05
+lemmafa2b938743~> 'is posb4eb4eba86
+lemmafaa9c8acee~> 'is pos00f8e8942b
+lemmafb0ebfc12a~> 'is pos83a0d216aa
+lemmafc32ea3c6b~> 'is pos75d89b17a4
+lemmafdf3beed04~> 'is pos49fb33a5c6
+pos002a1fcd8e~> 'means senseda38a026ab
+pos00f8e8942b~> 'means sense4ece92bfd9
+pos0347e3dc8e~> 'means senseda38a026ab
+pos0ae342613c~> 'means sense8095a9e6b4
+pos0b9995cd5d~> 'means sense5524244560
+pos12c0f1ee7a~> 'means senseda38a026ab
+pos12ec563702~> 'means sense8095a9e6b4
+pos1390c3be31~> 'means senseda38a026ab
+pos162f335187~> 'means senseda38a026ab
+pos172fda6753~> 'means senseda38a026ab
+pos1a3816d253~> 'means senseda38a026ab
+pos1a5ff82ae5~> 'means senseda38a026ab
+pos217871f31e~> 'means senseda38a026ab
+pos21c619ca73~> 'means sensef86f08d2e2
+pos22d786790a~> 'means sensef86f08d2e2
+pos236b000aa1~> 'means sense5524244560
+pos23a68a8d2b~> 'means senseda38a026ab
+pos2652d23622~> 'means senseda38a026ab
+pos269495d662~> 'means senseda38a026ab
+pos27093a6607~> 'means senseda38a026ab
+pos283289ef18~> 'means senseda38a026ab
+pos29eb57cafc~> 'means senseda38a026ab
+pos2ba9f770dd~> 'means sensef86f08d2e2
+pos2d7cbe1793~> 'means senseda38a026ab
+pos2e39921f77~> 'means senseda38a026ab
+pos358f613c8a~> 'means sense8095a9e6b4
+pos36d8a0e63e~> 'means senseda38a026ab
+pos3722df1028~> 'means sense310968d56f
+pos3722df1028~> 'means sense92e15899d7
+pos3722df1028~> 'means sensea5f1ab78b7
+pos3722df1028~> 'means senseb2f79ce965
+pos3722df1028~> 'means sensee629d8b849
+pos3722df1028~> 'means sensef86f08d2e2
+pos37d07f5e83~> 'means senseda38a026ab
+pos3afcdc8775~> 'means senseda38a026ab
+pos3b3b44fb1a~> 'means sense8095a9e6b4
+pos3b7b578927~> 'means senseda38a026ab
+pos3c91c6d9bc~> 'means sense8095a9e6b4
+pos3fc7440682~> 'means senseda38a026ab
+pos400e2c04fa~> 'means senseda38a026ab
+pos40bedcde3d~> 'means senseda38a026ab
+pos454ca32c7b~> 'means senseda38a026ab
+pos45b2f78257~> 'means sensef86f08d2e2
+pos48be3a8c62~> 'means sense8095a9e6b4
+pos49fb33a5c6~> 'means sensef86f08d2e2
+pos4a27143545~> 'means sense90edbe61b4
+pos4a5a86c7bd~> 'means senseda38a026ab
+pos4cd050d838~> 'means senseda38a026ab
+pos52af984c8e~> 'means sense90edbe61b4
+pos53276c2faa~> 'means senseda38a026ab
+pos53828a28f1~> 'means sensef86f08d2e2
+pos53c5fefdd3~> 'means sensef86f08d2e2
+pos583dbbd7c1~> 'means sense5524244560
+pos5945f4a88c~> 'means senseda38a026ab
+pos5b1b03041e~> 'means sense8095a9e6b4
+pos5b8591e2bc~> 'means sensee218329346
+pos5ef4098e1e~> 'means sense8095a9e6b4
+pos61a1c07120~> 'means sensef86f08d2e2
+pos6473e71a0d~> 'means senseda38a026ab
+pos66b6ed688a~> 'means senseda38a026ab
+pos6734388ceb~> 'means sense8095a9e6b4
+pos6a7ad647ae~> 'means senseda38a026ab
+pos6b76db03c3~> 'means senseda38a026ab
+pos6e1ac881a5~> 'means senseda38a026ab
+pos6e5c9329a8~> 'means senseda38a026ab
+pos6fc05d6155~> 'means sense8095a9e6b4
+pos7067c6efa1~> 'means senseda38a026ab
+pos70c93fbb47~> 'means sense8095a9e6b4
+pos70ca5d74c6~> 'means sense8095a9e6b4
+pos712ca843ca~> 'means senseda38a026ab
+pos718825f926~> 'means senseda38a026ab
+pos71e7aa6831~> 'means senseda38a026ab
+pos75d89b17a4~> 'means senseda38a026ab
+pos76ca843a7f~> 'means sensee218329346
+pos76f69059ac~> 'means sensee218329346
+pos78a01b223a~> 'means sense8095a9e6b4
+pos79f54bd342~> 'means sense7b57751785
+pos7b4bf047a5~> 'means sense90edbe61b4
+pos7ca2e7b7a1~> 'means senseda38a026ab
+pos7f7fb6d403~> 'means senseda38a026ab
+pos7f8fc0a70a~> 'means sense4ece92bfd9
+pos7f8fc0a70a~> 'means sense5524244560
+pos7f8fc0a70a~> 'means sense6ea9e80c3d
+pos7f8fc0a70a~> 'means sense7b57751785
+pos7f8fc0a70a~> 'means sense8095a9e6b4
+pos7f8fc0a70a~> 'means sense90edbe61b4
+pos7f8fc0a70a~> 'means senseda38a026ab
+pos7f8fc0a70a~> 'means sensee218329346
+pos810ea59d98~> 'means senseda38a026ab
+pos8272261f05~> 'means senseda38a026ab
+pos82f6ae7130~> 'means sense8095a9e6b4
+pos83a0d216aa~> 'means sensef86f08d2e2
+pos84a5f64c2e~> 'means sense8095a9e6b4
+pos84cd315e51~> 'means sense8095a9e6b4
+pos869ad4d4c8~> 'means sense8095a9e6b4
+pos8819b3eae4~> 'means sense8095a9e6b4
+pos89453006b2~> 'means sensef86f08d2e2
+pos8abf78a031~> 'means senseda38a026ab
+pos8c953c4fbb~> 'means senseda38a026ab
+pos8cff370755~> 'means sense5524244560
+pos8ef07ad582~> 'means sense90edbe61b4
+pos8f34f3db49~> 'means senseda38a026ab
+pos8f96b36193~> 'means senseda38a026ab
+pos91a5d1faa1~> 'means senseda38a026ab
+pos926bdd0d33~> 'means senseda38a026ab
+pos939a70c95b~> 'means sense8095a9e6b4
+pos93c775435f~> 'means senseda38a026ab
+pos95467c3689~> 'means senseda38a026ab
+pos97495274a8~> 'means sense8095a9e6b4
+pos97d056b11a~> 'means sense8095a9e6b4
+pos9b9ff30210~> 'means sensef86f08d2e2
+pos9be526592e~> 'means senseda38a026ab
+pos9e0e710234~> 'means sense8095a9e6b4
+pos9e5da87289~> 'means sense8095a9e6b4
+pos9f550e3669~> 'means senseda38a026ab
+pos9fb854c050~> 'means senseda38a026ab
+posa462660823~> 'means senseda38a026ab
+posa54755bcaa~> 'means sense8095a9e6b4
+posa8ec1ffe68~> 'means sense8095a9e6b4
+posabf9ceb9e3~> 'means senseda38a026ab
+posade3600c74~> 'means sense8095a9e6b4
+posb4d1705702~> 'means sense8095a9e6b4
+posb4eb4eba86~> 'means senseda38a026ab
+posb84f90110d~> 'means senseda38a026ab
+posb87fd52a1b~> 'means sense6ea9e80c3d
+posbac3839f97~> 'means sense8095a9e6b4
+posbb935ff58b~> 'means sense90edbe61b4
+posbc3dcacdaa~> 'means senseda38a026ab
+posc087fab3ae~> 'means senseda38a026ab
+posc1827b1993~> 'means sense8095a9e6b4
+posc360a20e09~> 'means sensef86f08d2e2
+posc384af9d73~> 'means sense90edbe61b4
+posc4b80a955a~> 'means senseda38a026ab
+poscc0eb62b54~> 'means senseda38a026ab
+posd2e6f18ffd~> 'means sensee218329346
+posd2ec255c53~> 'means senseda38a026ab
+posd31eb16f3f~> 'means sense8095a9e6b4
+posdb48c2f6f9~> 'means senseda38a026ab
+posdc3280615b~> 'means sense8095a9e6b4
+posdf53c51b96~> 'means sense90edbe61b4
+posdf6ca3c753~> 'means sense7b57751785
+pose2a009c635~> 'means sense8095a9e6b4
+pose41277bf28~> 'means sensef86f08d2e2
+pose499631911~> 'means sensef86f08d2e2
+pose74deb4481~> 'means senseda38a026ab
+pose7e0f1482c~> 'means sensef86f08d2e2
+poseafb3e54d8~> 'means senseda38a026ab
+posedc5b0780b~> 'means senseda38a026ab
+posefc5173c6e~> 'means sensef86f08d2e2
+posf3119d023c~> 'means sense8095a9e6b4
+posf6043dbd1d~> 'means senseda38a026ab
+posf6b3172996~> 'means sensef86f08d2e2
+posf6d7b3a598~> 'means senseda38a026ab
+posfa7a7ccc22~> 'means senseda38a026ab
+posfdd3b63753~> 'means sense8095a9e6b4
+posfe3151ea95~> 'means sense8095a9e6b4
+
+]
+
+;        preview fetch 'country ø
+        preview fetch'lemma ø
+;        preview fetch' pos	 ø
     ]
 ]
